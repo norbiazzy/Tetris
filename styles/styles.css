@@ -4,7 +4,7 @@ body {
   min-height: 100vh;
   box-sizing: border-box;
   font-family: "Exo 2", sans-serif;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .wrapper {

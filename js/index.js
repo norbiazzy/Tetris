@@ -32,11 +32,13 @@ const tetris = (function () {
     let blockSize = null
     let ctx = null
     let colors = ['#00F0F0', '#F0A000', '#0000F0', '#F0F000', '#00F000', '#F00000', '#52007B']
+    let score = null
 
     this.init = function (container) {
 
       myContainer = container
       btnChekState = myContainer.querySelector('#pause-button')
+      score = myContainer.querySelector('.game__score')
 
       canvas = myContainer.querySelector('#game-canvas')
       ctx = canvas.getContext('2d')
@@ -79,6 +81,9 @@ const tetris = (function () {
         ctx.fillRect(x * blockSize + 2, y * blockSize + 2, blockSize - 4, blockSize - 4)
 
       });
+    }
+    this.renderCheck = function (val) {
+      score.innetText = val
     }
   }
 
@@ -272,8 +277,16 @@ const tetris = (function () {
       return JSON.parse(JSON.stringify(tetraminos[this.rangeRandomNumb(0, 6)]))
     }
     // кнопки управлнеия, и игровой цикл
-    this.spawnTetra = function () {
-
+    this.sumChek = function (number) {
+      let check = board.check += number
+      if (check < 10) {
+        check = '000' + chek
+      } else if (check < 100) {
+        check = '00' + chek
+      } else if (check < 1000) {
+        check = '0' + chek
+      }
+      myView.renderCheck(check)
     }
 
     this.moveDownFigure = function () {
@@ -328,21 +341,25 @@ const tetris = (function () {
           }
         }
       }
+      this.sumChek(4)
       this.hideRow()
     }
     this.hideRow = function () {
+      let multiX = 1
       for (let y = 0; y < board.table.length; y++) {
         let count = 0
         for (let x = 0; x < board.table[y].length; x++) {
 
           if (board.table[y][x]) {
             count++
+            multiX++
           }
         }
         if (count === 10) {
           this.toDownArray(y)
         }
       }
+      this.sumChek(10 ** multiX)
     }
     this.toDownArray = function (i) {
       let y = i

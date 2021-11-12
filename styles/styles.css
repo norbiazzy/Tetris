@@ -17,9 +17,23 @@ body {
 *:after {
   box-sizing: inherit;
 }
-
+button, input {
+  background-color: #000;
+  color: #fff;
+}
+button:hover, input:hover {
+  color: #000;
+  background-color: #fff;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+table {
+  font-size: 20px;
+}
 .app {
-  padding: 20px;
+  height: 100vh;
+  overflow: hidden;
+  padding: 0px 20px;
   display: flex;
   min-height: 100vh;
   min-width: 100%;
@@ -151,6 +165,36 @@ body {
   margin-left: 20px;
   text-align: center;
 }
+.setting__input_checkbox {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+.checkbox {
+  cursor: pointer;
+  position: relative;
+  margin: 0 30px;
+  width: 42px;
+  height: 20px;
+  background-color:rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+}
+.checkbox::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  background-color:#fff;
+  border-radius: 10px;
+  transition: all .2s;
+}
+.setting__input_checkbox:checked+.checkbox::after {
+  background-color: #fc3;
+  left: 24px;
+  transition: all .2s;
+}
 
 .setting__time {}
 
@@ -228,21 +272,21 @@ body {
   left: 2200px;
 }
 
-td, th {
+tr {
   /* padding: 10px 32px; */
-  /* border: 1px solid black; */
+  border: 1px solid black;
 }
 
 .btn__sort {
-  padding: 10px 20px;
+  padding: 5px 15px;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  background-color: white;
+  /* background-color: white; */
 }
-.btn__sort:hover {
+/* .btn__sort:hover {
   background-color: black;
   color: white;
   cursor: pointer;
   transition: all 0.3s;
-}
+} */

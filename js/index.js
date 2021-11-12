@@ -40,6 +40,7 @@ const tetris = (function () {
     let btnNewGame = null
     let btnSaveScore = null
     let form = null
+    let drowCells = false
     const colors = ['#00F0F0', '#F0A000', '#0000F0', '#F0F000', '#00F000', '#F00000', '#52007B'];
     let canvas = {
       el: null,
@@ -47,7 +48,10 @@ const tetris = (function () {
       height: null,
       cellSize: null,
       ctx: null,
-      score: null
+      score: null,
+      line: null,
+      level: null,
+      isDrowCells: false,
     }
     let canvasAd = {
       el: null,
@@ -63,8 +67,9 @@ const tetris = (function () {
       btnCheckState = myContainer.querySelector('#pause-button')
       btnSaveScore = myContainer.querySelector('#save-score-btn')
       form = myContainer.querySelector('.game__form')
-      btnScoreSave = myContainer.querySelector('#save-score-btn')
-      score = myContainer.querySelector('.game__score')
+      canvas.score = myContainer.querySelector('#score')
+      canvas.level = myContainer.querySelector('#level')
+      canvas.line = myContainer.querySelector('#line')
 
       canvas.el = myContainer.querySelector('#game-canvas')
       canvas.ctx = canvas.el.getContext('2d')
@@ -75,14 +80,14 @@ const tetris = (function () {
 
       btnNewGame = myContainer.querySelector('#newGame-button')
 
-      // this.fillBoard()
     }
-    this.setSize = function (bigBoard, smallBoard) {
+    this.setSize = function (bigBoard, smallBoard, isDrowCells) {
       canvas.width = bigBoard.width;
       canvas.height = bigBoard.height;
       canvas.cellSize = bigBoard.cellSize;
       canvas.el.setAttribute('width', canvas.width);
       canvas.el.setAttribute('height', canvas.height);
+      canvas.isDrowCells = isDrowCells;
       canvasAd.width = smallBoard.width;
       canvasAd.height = smallBoard.height;
       canvasAd.cellSize = smallBoard.cellSize;
@@ -97,20 +102,34 @@ const tetris = (function () {
 
     }
     this.startNewGame = function () {
-      this.clearBord(true)
+      this.clearBord()
       btnCheckState.classList.remove('hide')
       form.classList.add('hide')
     }
     this.gameOver = function () {
+      let ctx = canvas.ctx
       btnCheckState.classList.add('hide')
       btnSaveScore.classList.remove('hide')
       form.classList.remove('hide')
+      setTimeout(() => {
+        ctx.fillStyle = 'black'
+        ctx.fillRect(2, 250, 316, 100)
+        ctx.font = '46px Arial';
+        ctx.textAlign = 'center'
+        ctx.fillStyle = 'black';
+        ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2);
+        ctx.font = '48px Arial';
+        ctx.fillStyle = 'red';
+        ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2);
+      }, 0);
     }
     this.reDraw = function (arr) {
       let ctx = canvas.ctx
       ctx.fillStyle = 'white'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
-
+      if (canvas.isDrowCells) {
+        this.drowCells()
+      }
       ctx.beginPath()
       arr.forEach(info => {
         let block = canvas.cellSize
@@ -142,25 +161,37 @@ const tetris = (function () {
             ctx.fillRect(x * block + 6, y * block + 6, block - 1, block - 1)
           }
         }
+      }
+    }
+    this.renderStats = function (score, level = 1, line = 0) {
+      canvas.score.innerText = score
+      canvas.level.innerText = level
+      canvas.line.innerText = line
+
+    }
+    this.drowCells = function () {
+      let block = canvas.cellSize
+      let ctx = canvas.ctx
+      for (let y = 0; y < 20; y++) {
+        for (let x = 0; x < 10; x++) {
+            ctx.strokeStyle = 'gray'
+            ctx.strokeRect(x * block, y * block, block, block)
+        }
 
       }
     }
-    this.renderScore = function (val) {
-      score.innerText = 'Счет: ' + val
-    }
-    this.clearBord = function (all) {
-      ctxAd = canvasAd.ctx
-      ctx = canvas.ctx
+    this.clearBord = function () {
+      let ctxAd = canvasAd.ctx
+      let ctx = canvas.ctx
 
       ctx.fillStyle = 'white'
       ctxAd.fillStyle = 'white'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
       ctxAd.fillRect(0, 0, canvasAd.width, canvasAd.height)
-
+      // if (canvas.isDrowCells)this.drowCells()
     }
     this.btnSaveState = function (str) {
-      console.log(btnScoreSave);
-      btnScoreSave.disabled = str
+      btnSaveScore.disabled = str
     }
   }
 
@@ -181,7 +212,11 @@ const tetris = (function () {
       col: 10,
       cellSize: 32,
       isPlay: false,
-      score: 0
+      score: 0,
+      level: 1,
+      line: 0,
+      time: null,
+      isDrowCells: false,
     }
     let boardNextTetra = {
       width: 180,
@@ -192,10 +227,10 @@ const tetris = (function () {
     let tetraminos = [{
         name: 'I',
         table: [
-          [0, 1, 0, 0],
-          [0, 1, 0, 0],
-          [0, 1, 0, 0],
-          [0, 1, 0, 0],
+          [0, 0, 1, 0],
+          [0, 0, 1, 0],
+          [0, 0, 1, 0],
+          [0, 0, 1, 0],
         ],
         posX: 3,
         posY: -4,
@@ -266,15 +301,47 @@ const tetris = (function () {
 
     this.init = function (view) {
       myView = view
+      // screenGame = JSON.parse(localStorage.getItem('game'))
+      setting = JSON.parse(localStorage.getItem('setting'))
+      // if (screenGame) {
+      //   board = screenGame.board
+      //   board.isPlay = true
+      //   board.table = []
+      //   for (key in screenGame.table) {
+      //     board.table[key] = screenGame.table[key]
+      //   }
+      //   nextTetra = JSON.parse(JSON.stringify(screenGame.nextTetra))
+      //   curTetra = screenGame.curTetra
+      //   ani = screenGame.ani
+      //   myView.setSize(board, boardNextTetra)
+      //   myView.startNewGame()
+      //   myView.renderNexTetra(nextTetra)
+      //   this.stateGame()
+      //   myView.reDraw(this.calcCords())
+      //   this.sumScore(0)
+      // } else {
+      board.time = setting.time
+      board.isDrowCells = setting.isDrowCells
       curTetra = this.getRandomTetra()
       board.table = this.clearBoardTable()
-      myView.setSize(board, boardNextTetra)
-      setting = JSON.parse(localStorage.getItem('setting'))
+      myView.setSize(board, boardNextTetra, board.isDrowCells)
+      // }
     }
+    // this.saveHash = function () {
+    //   debugger
+    //   localStorage.setItem('game', JSON.stringify({
+    //     board: board,
+    //     table: Object.assign({}, board.table),
+    //     curTetra: curTetra,
+    //     nextTetra: nextTetra,
+    //     ani: ani,
+    //   }))
+    //   clearInterval(ani)
+    //   console.log(1);
+    // }
 
     this.rotateTetramino = function () {
       let table = curTetra.table
-      // let arr = new Array(table.length).fill([0, 0, 0])
       let arr = []
       for (let i = 0; i < table.length; i++) {
         arr[i] = new Array(length).fill(0)
@@ -299,14 +366,11 @@ const tetris = (function () {
       }
       for (let y = 0; y < curTetra.table.length; y++) {
         for (let x = 0; x < curTetra.table[y].length; x++) {
-
           if (curTetra.table[y][x]) arr.push([curTetra.posY + y, curTetra.posX + x, curTetra.table[y][x]])
         }
       }
       return arr
     }
-
-
 
     this.clearBoardTable = function () {
       let arr = []
@@ -330,12 +394,16 @@ const tetris = (function () {
         this.startAnimation()
       }
     }
+
     this.startNewGame = function () {
+      localStorage.removeItem('game')
       board.score = 0
+      board.line = 0
+      board.level = 1
       board.table = this.clearBoardTable()
       board.isPlay = true
-      curTetra = 0
-      nextTetra = 0
+      curTetra = null
+      nextTetra = null
       clearInterval(ani)
       setTimeout(() => {
         curTetra = this.getRandomTetra()
@@ -346,21 +414,25 @@ const tetris = (function () {
       }, 100);
 
       myView.startNewGame()
-      myView.renderScore(0)
+      myView.renderStats('0000')
     }
+
     this.startAnimation = function () {
+      clearInterval(ani)
       ani = setInterval(() => {
         this.moveDownFigure()
         myView.reDraw(this.calcCords())
-      }, setting.time);
+      }, board.time);
+
+
     }
 
     this.getRandomTetra = function () {
       return JSON.parse(JSON.stringify(tetraminos[this.rangeRandomNumb(0, 6)]))
     }
     // кнопки управлнеия, и игровой цикл
-    this.sumCheck = function (number) {
-      board.score += number
+    this.calcStats = function (points) {
+      board.score += points
       let score = board.score
       if (score < 10) {
         score = '000' + score
@@ -369,7 +441,15 @@ const tetris = (function () {
       } else if (score < 1000) {
         score = '0' + score
       }
-      myView.renderScore(score)
+      if (board.line >= 10) {
+        board.line %= 10
+        board.level++
+        board.time *= 0.8
+        this.startAnimation()
+        console.log(board.time);
+      }
+
+      myView.renderStats(score, board.level, board.line)
     }
 
     this.moveDownFigure = function () {
@@ -378,11 +458,10 @@ const tetris = (function () {
       if (this.colizz()) {
         curTetra.posY -= 1
         this.lock()
-        this.respawn()
       }
     }
 
-    this.respawn = function () {
+    this.respawnTetra = function () {
       curTetra = JSON.parse(JSON.stringify(nextTetra))
       nextTetra = this.getRandomTetra()
       myView.renderNexTetra(nextTetra)
@@ -398,6 +477,7 @@ const tetris = (function () {
 
     this.moveRightFigure = function () {
       curTetra.posX += 1
+
       if (this.colizz()) {
         curTetra.posX -= 1
       }
@@ -426,9 +506,10 @@ const tetris = (function () {
           }
         }
       }
-      this.sumCheck(4)
+      this.calcStats(4)
       this.hideRow()
       if (curTetra.posY < 0) this.gameOver()
+      else this.respawnTetra()
     }
     this.gameOver = function () {
       myView.clearBord()
@@ -437,7 +518,6 @@ const tetris = (function () {
       myView.gameOver()
     }
     this.hideRow = function () {
-      console.log('hide row');
       let multiX = -1
       for (let y = 0; y < board.table.length; y++) {
         let count = 0
@@ -449,13 +529,14 @@ const tetris = (function () {
         }
         if (count === 10) {
           multiX++
-          this.toDownArray(y)
+          board.line++
+          this.downBordArr(y)
         }
       }
-      if (multiX > -1) this.sumCheck((2 ** multiX) * 10)
+      if (multiX > -1) this.calcStats((2 ** multiX) * 10)
+
     }
-    this.toDownArray = function (i) {
-      console.log(1111111111111);
+    this.downBordArr = function (i) {
       let y = i
       for (y; y > 0; y--) {
         for (let x = 0; x < board.table[y].length; x++) {
@@ -475,7 +556,6 @@ const tetris = (function () {
       if (this.colizz()) {
         curTetra.posY -= 1
         this.lock()
-        this.respawn()
       } else this.jumpToDown()
 
     }
@@ -497,6 +577,10 @@ const tetris = (function () {
           break;
         case setting.keyDown:
           e.preventDefault()
+          this.moveDownFigure()
+          break;
+        case setting.keyPowerDown:
+          e.preventDefault()
           this.jumpToDown()
           break;
       }
@@ -514,6 +598,7 @@ const tetris = (function () {
 
     }
     this.validName = function (str) {
+      console.log(str);
       myView.btnSaveState(!str)
     }
 
@@ -525,6 +610,7 @@ const tetris = (function () {
     let myModel = null
 
     let btnCheckState = null
+    let btnSaveScore = null
     let btnNewGame = null
     let playerNameInput = null
     let self = this
@@ -547,7 +633,6 @@ const tetris = (function () {
 
       btnNewGame = myContainer.querySelector('#newGame-button')
       btnNewGame.addEventListener('click', this.newGame)
-
     }
     this.saveScore = function (e) {
       e.preventDefault()
@@ -558,7 +643,6 @@ const tetris = (function () {
     }
 
     this.moveFigure = function (e) {
-      // e.preventDefault()
       myModel.keyMove(e)
     }
 
@@ -602,47 +686,65 @@ const gameSetting = (function () {
   function View() {
     let myContainer = null
 
+    let inputTitme = null
+    let btnRotate = null
+    let btnLeft = null
+    let btnRight = null
+    let btnDown = null
+    let btnReset = null
+    let btnPowerDown = null
+    let checkBoxCell = null
     this.init = function (container) {
       myContainer = container
 
       inputTitme = myContainer.querySelector('#time')
       btnRotate = myContainer.querySelector('#setting-rotate')
-      btnForLeft = myContainer.querySelector('#setting-left')
-      btnForRight = myContainer.querySelector('#setting-right')
-      btnForDown = myContainer.querySelector('#setting-down')
+      btnLeft = myContainer.querySelector('#setting-left')
+      btnRight = myContainer.querySelector('#setting-right')
+      btnDown = myContainer.querySelector('#setting-down')
       btnReset = myContainer.querySelector('#setting-reset')
+      btnPowerDown = myContainer.querySelector('#setting-power-down')
+      checkBoxCell = myContainer.querySelector('#setting-cells')
     }
     this.setSetting = function ({
       time,
       keyRotate,
       keyLeft,
       keyRight,
-      keyDown
+      keyDown,
+      keyPowerDown,
+      isDrowCells
     }) {
       inputTitme.value = time;
       btnRotate.value = keyRotate;
-      btnForLeft.value = keyLeft;
-      btnForRight.value = keyRight;
-      btnForDown.value = keyDown
+      btnLeft.value = keyLeft;
+      btnRight.value = keyRight;
+      btnDown.value = keyDown;
+      btnPowerDown.value = keyPowerDown;
+      checkBoxCell.checked = isDrowCells
     }
   }
 
   function Model() {
-    myView = null
+    let myView = null
 
     let defaultSetting = {
       time: 500,
-      keyRotate: 'Space',
+      keyRotate: 'ArrowUp',
       keyLeft: 'ArrowLeft',
       keyRight: 'ArrowRight',
       keyDown: 'ArrowDown',
+      keyPowerDown: 'Space',
+      isDrowCells: false,
     }
     let customSetting = {
       time: 500,
-      keyRotate: 'Space',
+      keyRotate: 'ArrowUp',
       keyLeft: 'ArrowLeft',
       keyRight: 'ArrowRight',
       keyDown: 'ArrowDown',
+      keyPowerDown: 'Space',
+      isDrowCells: false,
     }
 
     this.init = function (view) {
@@ -672,11 +774,13 @@ const gameSetting = (function () {
     let myContainer = null
     let myModel = null
 
+    let scrinGame = null
+
     let inputTitme = null
     let btnRotate = null
-    let btnForLeft = null
-    let btnForRight = null
-    let keyForDown = null
+    let btnLeft = null
+    let btnRight = null
+    let keyDown = null
 
     this.init = function (contrainer, model) {
       myContainer = contrainer
@@ -688,22 +792,32 @@ const gameSetting = (function () {
       btnRotate = myContainer.querySelector('#setting-rotate')
       btnRotate.addEventListener('click', this.setBtn)
 
-      btnForLeft = myContainer.querySelector('#setting-left')
-      btnForLeft.addEventListener('click', this.setBtn)
+      btnLeft = myContainer.querySelector('#setting-left')
+      btnLeft.addEventListener('click', this.setBtn)
 
-      btnForRight = myContainer.querySelector('#setting-right')
-      btnForRight.addEventListener('click', this.setBtn)
+      btnRight = myContainer.querySelector('#setting-right')
+      btnRight.addEventListener('click', this.setBtn)
 
-      keyForDown = myContainer.querySelector('#setting-down')
-      keyForDown.addEventListener('click', this.setBtn)
+      keyDown = myContainer.querySelector('#setting-down')
+      keyDown.addEventListener('click', this.setBtn)
+
+      keyDown = myContainer.querySelector('#setting-power-down')
+      keyDown.addEventListener('click', this.setBtn)
+
+      checkBoxCell = myContainer.querySelector('#setting-cells')
+      checkBoxCell.addEventListener('click', this.setChek)
 
       btnReset = myContainer.querySelector('#setting-reset')
       btnReset.addEventListener('click', this.setDefaultSettings)
 
     }
+    this.setChek = function (e) {
+      console.log(e.target.checked);
+      myModel.first(e.target.dataset.control, e.target.checked)
+    }
     this.setVal = function (e) {
       e.preventDefault()
-      myModel.first(e.target.dataset.control, e.target.value, true)
+      myModel.first(e.target.dataset.control, e.target.value)
     }
     this.setBtn = function (e) {
       e.preventDefault()
@@ -836,15 +950,9 @@ const scoreTable = (function () {
       myModel = model;
       thead = myContainer.querySelector('thead')
       thead.addEventListener('click', this.sortFor)
-
-      // sortBtns = Array.from(myContainer.querySelector('.btn__sort'))
-      // .forEach((el) => {
-      //   el.addEventListener('click', console.log(1))
-      // })
     }
     this.sortList = function (e) {
       e.preventDefault()
-      console.log(e);
       myModel.sortList(e.dataset.sort)
     }
     this.sortFor = function (e) {
@@ -950,9 +1058,6 @@ const mySPA = (function () {
         scoreTable.init()
       }
     }
-    // this.closeModal = function () {
-    //   console.log('close');
-    // }
   }
 
   /* -------- end model -------- */
@@ -988,10 +1093,11 @@ const mySPA = (function () {
       if (!localStorage.getItem('setting')) {
         localStorage.setItem('setting', JSON.stringify({
           time: 500,
-          keyRotate: 'Space',
+          keyRotate: 'ArrowUp',
           keyLeft: 'ArrowLeft',
           keyRight: 'ArrowRight',
           keyDown: 'ArrowDown',
+          keyPowerDown: 'Space',
         }))
       }
       this.renderComponents(container, components);

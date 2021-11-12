@@ -8,7 +8,9 @@ const HomePage = {
       <aside class="game__bar">
         <div class="game__info">
           <h3 class="game__title">Norbi</h3>
+          <p class="game__score">Уровень: <span id='level'>1</span></p>
           <p class="game__score">Счет: <span id='score'>0000</span></p>
+          <p class="game__score">Линии: <span id='line'>0</span></p>
           <div>
             <canvas class=" game__canvas_small" id="canvas-next-tetra"></canvas>
           </div>
@@ -35,13 +37,28 @@ const SettingPage = {
       <section class="${className}">
       <div class="setting">
       <form class="setting__form">
-        <label class="setting__item setting__time">Время между фигурами<input class="setting__input" type="number" value="500" name="time" id="time" data-control="time"></label>
-        <label class="setting__item setting__rotate"> Вращение фигуры<input class="setting__input" type="button" value="Spase" id="setting-rotate" data-control="keyRotate"></label>
-        <label class="setting__item setting__left"> Фигура влево<input class="setting__input" type="button" value="ArrowLeft" id="setting-left" data-control="keyLeft"></label>
-        <label class="setting__item setting__rigth"> Фигура вправо<input class="setting__input" type="button" value="ArrowRight" id="setting-right" data-control="keyRight"></label>
-
-        <label class="setting__item setting__down"> Прыжок вниз<input class="setting__input" type="button" value="ArrowDown" id="setting-down" data-control="keyDown"></label>
-
+        <label class="setting__item setting__time">Время между фигурами
+          <input class="setting__input" type="number" max="700" min="200" value="500" name="time" id="time" data-control="time">
+        </label>
+        <label class="setting__item setting__rotate"> Вращение фигуры
+          <input class="setting__input" type="button" value="ArrowUp" id="setting-rotate" data-control="keyRotate">
+        </label>
+        <label class="setting__item setting__left"> Фигура влево
+          <input class="setting__input" type="button" value="ArrowLeft" id="setting-left" data-control="keyLeft">
+        </label>
+        <label class="setting__item setting__rigth"> Фигура вправо
+          <input class="setting__input" type="button" value="ArrowRight" id="setting-right" data-control="keyRight">
+        </label>
+        <label class="setting__item setting__down"> Фигура вниз
+          <input class="setting__input" type="button" value="ArrowDown" id="setting-down" data-control="keyDown">
+        </label>
+        <label class="setting__item setting__power-down"> Прыжок вниз
+          <input class="setting__input" type="button" value="Spase" id="setting-power-down" data-control="keyPowerDown">
+        </label>
+        <label class="setting__item setting__power-down">Сетка
+          <input class="setting__input setting__input_checkbox" type="checkbox" id="setting-cells" value="true" data-control="isDrowCells">
+          <span class="checkbox"></span>
+        </label>
         <input class="setting__item setting__btn setting__reset" id="setting-reset" type="button" value="Cбросить настройки">
       </form>
     </div>

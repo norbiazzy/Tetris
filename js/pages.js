@@ -5,16 +5,24 @@ const HomePage = {
     return `
     <section class="game ${className}">
       <canvas class="game__canvas" id="game-canvas"></canvas>
-      <div class="game__bar">
+      <aside class="game__bar">
         <div class="game__info">
           <h3 class="game__title">Norbi</h3>
-          <p class="game__score">Счет: 000</p>
+          <p class="game__score">Счет: <span id='score'>0000</span></p>
+          <div>
+            <canvas class=" game__canvas_small" id="canvas-next-tetra"></canvas>
+          </div>
         </div>
         <div class="game__btns">
-          <button class="game__button hide" id="pause-button">Пауза</button>
-          <button class="game__button" id="newGame-button">Новая игра</button>
+          <form class="game__form hide">
+            <label class="game__subtitle">Ведите имя:</label>
+            <input class="game__item" type="text" placeholder='Username' name="username" id="username">
+            <input type="button" value="Сохранить результат" disabled="true" class="game__item hide" id="save-score-btn">
+          </form>
+          <button class="game__item hide" id="pause-button">Пауза</button>
+          <button class="game__item" id="newGame-button">Новая игра</button>
         </div>
-        </div>
+      </aside>
     </section>
     `;
   }
@@ -55,13 +63,24 @@ const HelpPage = {
     `;
   }
 };
-const ChekPage = {
-  id: "chek",
+const CheckPage = {
+  id: "check",
   title: "Лучшие игроки",
   render: (className = "container", ...rest) => {
     return `
       <section class="${className}">
-        <p>Счет</p>
+      <h2>Таблица лидеров</h2>
+        <table class="check__table">
+          <thead class="check__head">
+            <tr class="check__row">
+              <th><button class="btn__sort" data-sort="number">#</button></th>
+              <th><button class="btn__sort" data-sort="date">Дата</button></th>
+              <th><button class="btn__sort" data-sort="name">Имя Игрока</button></th>
+              <th><button class="btn__sort" data-sort="score">Счет</button></th>
+            </tr>
+          </thead>
+          <tbody class="check__body"></tbody>
+        </table>
       </section>
     `;
   }

@@ -17,7 +17,7 @@ const NavBar = {
           <li><a class="mainmenu__link" href="#main">Игра</a></li>
           <li><a class="mainmenu__link" href="#setting">Настройки</a></li>
           <li><a class="mainmenu__link" href="#help">Помощь</a></li>
-          <li><a class="mainmenu__link" href="#chek">Счет</a></li>
+          <li><a class="mainmenu__link" href="#check">Счет</a></li>
         </ul>
       </nav>
     `;

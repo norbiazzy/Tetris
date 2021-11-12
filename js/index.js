@@ -13,7 +13,7 @@ const routes = {
   default: HomePage,
   setting: SettingPage,
   help: HelpPage,
-  chek: ChekPage,
+  check: CheckPage,
   error: ErrorPage,
 };
 
@@ -24,66 +24,131 @@ const tetris = (function () {
 
   function GameView() {
     let myContainer = null
-    let btnChekState = null
+    let btnCheckState = null
     let btnNewGame = null
-    let canvas = null
-    let boardWidth = null
-    let boardHeight = null
-    let blockSize = null
-    let ctx = null
-    let colors = ['#00F0F0', '#F0A000', '#0000F0', '#F0F000', '#00F000', '#F00000', '#52007B']
-    let score = null
+    let btnSaveScore = null
+    let form = null
+    const colors = ['#00F0F0', '#F0A000', '#0000F0', '#F0F000', '#00F000', '#F00000', '#52007B'];
+    let canvas = {
+      el: null,
+      width: null,
+      height: null,
+      cellSize: null,
+      ctx: null,
+      score: null
+    }
+    let canvasAd = {
+      el: null,
+      width: null,
+      height: null,
+      ctx: null,
+      cellSize: null,
+    }
 
     this.init = function (container) {
 
       myContainer = container
-      btnChekState = myContainer.querySelector('#pause-button')
+      btnCheckState = myContainer.querySelector('#pause-button')
+      btnSaveScore = myContainer.querySelector('#save-score-btn')
+      form = myContainer.querySelector('.game__form')
+      btnScoreSave = myContainer.querySelector('#save-score-btn')
       score = myContainer.querySelector('.game__score')
 
-      canvas = myContainer.querySelector('#game-canvas')
-      ctx = canvas.getContext('2d')
+      canvas.el = myContainer.querySelector('#game-canvas')
+      canvas.ctx = canvas.el.getContext('2d')
+
+      canvasAd.el = myContainer.querySelector('#canvas-next-tetra')
+      canvasAd.ctx = canvasAd.el.getContext('2d')
+
+
       btnNewGame = myContainer.querySelector('#newGame-button')
 
       // this.fillBoard()
     }
-    this.setSize = function ({
-      width,
-      height,
-      cellSize
-    }) {
-      boardWidth = width
-      boardHeight = height
-      blockSize = cellSize
-      canvas.setAttribute('width', boardWidth)
-      canvas.setAttribute('height', boardHeight)
+    this.setSize = function (bigBoard, smallBoard) {
+      canvas.width = bigBoard.width;
+      canvas.height = bigBoard.height;
+      canvas.cellSize = bigBoard.cellSize;
+      canvas.el.setAttribute('width', canvas.width);
+      canvas.el.setAttribute('height', canvas.height);
+      canvasAd.width = smallBoard.width;
+      canvasAd.height = smallBoard.height;
+      canvasAd.cellSize = smallBoard.cellSize;
+      canvasAd.el.setAttribute('width', canvasAd.width);
+      canvasAd.el.setAttribute('height', canvasAd.height);
     }
     this.stopGame = function () {
-      btnChekState.innerHTML = 'Продолжить'
+      btnCheckState.innerHTML = 'Продолжить'
     }
     this.playGame = function () {
-      btnChekState.innerHTML = 'Пауза'
+      btnCheckState.innerHTML = 'Пауза'
 
     }
     this.startNewGame = function () {
-      btnChekState.classList.remove('hide')
+      this.clearBord(true)
+      btnCheckState.classList.remove('hide')
+      form.classList.add('hide')
+    }
+    this.gameOver = function () {
+      btnCheckState.classList.add('hide')
+      btnSaveScore.classList.remove('hide')
+      form.classList.remove('hide')
     }
     this.reDraw = function (arr) {
+      let ctx = canvas.ctx
       ctx.fillStyle = 'white'
-      ctx.fillRect(0, 0, 320, 640)
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
 
       ctx.beginPath()
       arr.forEach(info => {
+        let block = canvas.cellSize
         let y = info[0]
         let x = info[1]
+
         ctx.fillStyle = 'black'
-        ctx.fillRect(x * blockSize, y * blockSize, blockSize, blockSize)
+        ctx.fillRect(x * block - 0.5, y * block - 0.5, block + 1, block + 1)
         ctx.fillStyle = colors[info[2] - 1]
-        ctx.fillRect(x * blockSize + 2, y * blockSize + 2, blockSize - 4, blockSize - 4)
+        ctx.fillRect(x * block + 1, y * block + 1, block - 2, block - 2)
 
       });
     }
-    this.renderCheck = function (val) {
-      score.innetText = val
+    this.renderNexTetra = function ({
+      table
+    }) {
+      let ctx = canvasAd.ctx
+      let block = canvasAd.cellSize
+
+      this.clearBord()
+
+      ctx.beginPath()
+      for (let y = 0; y < table.length; y++) {
+        for (let x = 0; x < table.length; x++) {
+          if (table[y][x]) {
+            ctx.fillStyle = 'black'
+            ctx.fillRect(x * block + 5, y * block + 5, block + 1, block + 1)
+            ctx.fillStyle = colors[table[y][x] - 1]
+            ctx.fillRect(x * block + 6, y * block + 6, block - 1, block - 1)
+          }
+        }
+
+      }
+    }
+    this.renderScore = function (val) {
+      score.innerText = 'Счет: ' + val
+    }
+    this.clearBord = function (all) {
+      ctxAd = canvasAd.ctx
+      ctx = canvas.ctx
+
+      ctx.fillStyle = 'white'
+      ctxAd.fillStyle = 'white'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctxAd.fillRect(0, 0, canvasAd.width, canvasAd.height)
+
+    }
+    this.btnSaveState = function (str) {
+      console.log(btnScoreSave);
+      btnScoreSave.disabled = str
     }
   }
 
@@ -91,13 +156,11 @@ const tetris = (function () {
 
     let myView = null
     // проверим идет ли анимация
-    let rAF = false
     let ani = null
 
     let setting = {}
-
-
     let curTetra = null
+
     let board = {
       width: 320,
       height: 640,
@@ -106,7 +169,12 @@ const tetris = (function () {
       col: 10,
       cellSize: 32,
       isPlay: false,
-      check: '0000'
+      score: 0
+    }
+    let boardNextTetra = {
+      width: 180,
+      height: 180,
+      cellSize: 40,
     }
 
     let tetraminos = [{
@@ -188,7 +256,7 @@ const tetris = (function () {
       myView = view
       curTetra = this.getRandomTetra()
       board.table = this.clearBoardTable()
-      myView.setSize(board)
+      myView.setSize(board, boardNextTetra)
       setting = JSON.parse(localStorage.getItem('setting'))
     }
 
@@ -204,9 +272,6 @@ const tetris = (function () {
           arr[x][y] = table[table.length - 1 - y][x]
         }
       }
-
-      console.log(curTetra.table);
-      console.log(arr);
       curTetra.table = arr
       if (this.colizz()) {
         curTetra.table = table
@@ -243,15 +308,18 @@ const tetris = (function () {
     }
 
     this.stateGame = function () {
-      if (rAF) {
-        rAF = false
-        myView.playGame()
-      } else {
-        rAF = true
+      if (board.isPlay) {
         myView.stopGame()
+        board.isPlay = false
+        clearInterval(ani)
+      } else {
+        myView.playGame()
+        board.isPlay = true
+        this.startAnimation()
       }
     }
     this.startNewGame = function () {
+      board.score = 0
       board.table = this.clearBoardTable()
       board.isPlay = true
       curTetra = 0
@@ -260,11 +328,13 @@ const tetris = (function () {
       setTimeout(() => {
         curTetra = this.getRandomTetra()
         nextTetra = this.getRandomTetra()
+        myView.renderNexTetra(nextTetra)
         this.startAnimation()
 
       }, 100);
 
       myView.startNewGame()
+      myView.renderScore(0)
     }
     this.startAnimation = function () {
       ani = setInterval(() => {
@@ -277,16 +347,17 @@ const tetris = (function () {
       return JSON.parse(JSON.stringify(tetraminos[this.rangeRandomNumb(0, 6)]))
     }
     // кнопки управлнеия, и игровой цикл
-    this.sumChek = function (number) {
-      let check = board.check += number
-      if (check < 10) {
-        check = '000' + chek
-      } else if (check < 100) {
-        check = '00' + chek
-      } else if (check < 1000) {
-        check = '0' + chek
+    this.sumCheck = function (number) {
+      board.score += number
+      let score = board.score
+      if (score < 10) {
+        score = '000' + score
+      } else if (score < 100) {
+        score = '00' + score
+      } else if (score < 1000) {
+        score = '0' + score
       }
-      myView.renderCheck(check)
+      myView.renderScore(score)
     }
 
     this.moveDownFigure = function () {
@@ -302,6 +373,7 @@ const tetris = (function () {
     this.respawn = function () {
       curTetra = JSON.parse(JSON.stringify(nextTetra))
       nextTetra = this.getRandomTetra()
+      myView.renderNexTetra(nextTetra)
     }
 
     this.moveLeftFigure = function () {
@@ -333,6 +405,7 @@ const tetris = (function () {
       }
       return false
     }
+
     this.lock = function () {
       for (let y = 0; y < curTetra.table.length; y++) {
         for (let x = 0; x < curTetra.table[y].length; x++) {
@@ -341,27 +414,36 @@ const tetris = (function () {
           }
         }
       }
-      this.sumChek(4)
+      this.sumCheck(4)
       this.hideRow()
+      if (curTetra.posY < 0) this.gameOver()
+    }
+    this.gameOver = function () {
+      myView.clearBord()
+      clearInterval(ani)
+      board.isPlay = false
+      myView.gameOver()
     }
     this.hideRow = function () {
-      let multiX = 1
+      console.log('hide row');
+      let multiX = -1
       for (let y = 0; y < board.table.length; y++) {
         let count = 0
         for (let x = 0; x < board.table[y].length; x++) {
 
           if (board.table[y][x]) {
             count++
-            multiX++
           }
         }
         if (count === 10) {
+          multiX++
           this.toDownArray(y)
         }
       }
-      this.sumChek(10 ** multiX)
+      if (multiX > -1) this.sumCheck((2 ** multiX) * 10)
     }
     this.toDownArray = function (i) {
+      console.log(1111111111111);
       let y = i
       for (y; y > 0; y--) {
         for (let x = 0; x < board.table[y].length; x++) {
@@ -385,24 +467,44 @@ const tetris = (function () {
       } else this.jumpToDown()
 
     }
-    this.keyMove = function (key) {
-      console.log(setting);
-      switch (key) {
+    this.keyMove = function (e) {
+      if (!board.isPlay) return // если игра окончена
+
+      switch (e.code) {
         case setting.keyLeft:
+          e.preventDefault()
           this.moveLeftFigure()
           break;
         case setting.keyRight:
+          e.preventDefault()
           this.moveRightFigure()
           break;
         case setting.keyRotate:
+          e.preventDefault()
           this.rotateTetramino()
           break;
         case setting.keyDown:
+          e.preventDefault()
           this.jumpToDown()
           break;
       }
       myView.reDraw(this.calcCords())
     }
+    this.saveScore = function (username) {
+      let date = Date.parse(new Date)
+      myAppDB.ref('players/' + `player_${username.replace(/\s/g, "").toLowerCase()}`).set({
+          username: `${username}`,
+          score: `${board.score}`,
+          date: date
+        })
+        .then((username) => console.log('ADD'))
+        .catch((error) => console.error(error))
+
+    }
+    this.validName = function (str) {
+      myView.btnSaveState(!str)
+    }
+
   }
 
 
@@ -410,34 +512,46 @@ const tetris = (function () {
     let myContainer = null
     let myModel = null
 
-    let btnChekState = null
+    let btnCheckState = null
     let btnNewGame = null
+    let playerNameInput = null
     let self = this
 
     this.init = function (contrainer, model) {
       myContainer = contrainer
       myModel = model
 
-      btnChekState = myContainer.querySelector('#pause-button')
-      btnChekState.addEventListener('click', this.stateGame)
+      playerNameInput = myContainer.querySelector('#username')
+      playerNameInput.addEventListener('input', (e) => {
+        e.preventDefault()
+        myModel.validName(playerNameInput.value)
+      })
+
+      btnCheckState = myContainer.querySelector('#pause-button')
+      btnCheckState.addEventListener('click', this.stateGame)
+
+      btnSaveScore = myContainer.querySelector('#save-score-btn')
+      btnSaveScore.addEventListener('click', this.saveScore)
 
       btnNewGame = myContainer.querySelector('#newGame-button')
       btnNewGame.addEventListener('click', this.newGame)
+
     }
-
-    this.stateGame = function (e) {
+    this.saveScore = function (e) {
       e.preventDefault()
-      if (board.isPlay) document.removeEventListener('keydown', self.moveFigure)
-      else document.addEventListener('keydown', self.moveFigure)
-
+      myModel.saveScore(playerNameInput.value)
+    }
+    this.stateGame = function () {
       myModel.stateGame()
     }
 
     this.moveFigure = function (e) {
-      myModel.keyMove(e.code)
+      // e.preventDefault()
+      myModel.keyMove(e)
     }
 
     this.newGame = function (e) {
+      e.preventDefault()
       e.target.blur()
       // в данном случае this равен кнопке
       document.addEventListener('keydown', self.moveFigure)
@@ -621,6 +735,138 @@ const gameSetting = (function () {
 
 
 
+/* ----- spa init module --- */
+const scoreTable = (function () {
+  /* ------- begin view -------- */
+  function ScoreView() {
+    let myContainer = null;
+    let tbody = null
+
+    this.init = function (container, routes) {
+      myContainer = container;
+      tbody = myContainer.querySelector('tbody')
+    }
+    this.renderScoreTable = function (arr) {
+      tbody.innerHTML = ''
+      arr.forEach((obj) => {
+        let date = new Date(obj.date)
+        tbody.innerHTML += `<tr><td>${obj.number}</td><td>${date.getFullYear()}:${date.getMonth()}:${date.getDate()}</td><td>${obj.username}</td><td>${obj.score}</td></tr`
+      })
+    }
+  }
+
+
+
+  function ScoreModel() {
+    let myView = null;
+    let playerList = null
+    let sort = {
+      type: 'score',
+      back: true,
+    }
+    this.init = function (view) {
+      myView = view;
+      myAppDB.ref('players/').once('value')
+        .then((snapshot) => {
+          let i = 1
+          playerList = Object.values(snapshot.val())
+
+          playerList.sort((a, b) => b.score - a.score)
+          for (let i = 0; i < playerList.length; i++) {
+            playerList[i].number = i + 1
+          }
+          myView.renderScoreTable(playerList);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    }
+    this.sortFor = function (type) {
+      let back = sort.back
+      if (sort.type === type) {
+        sort.back ? back = false : back = true
+      } else {
+        sort.type = type;
+        sort.back = false;
+      }
+      if (type === 'score') {
+        playerList.sort((a, b) => back ? b.score - a.score : a.score - b.score)
+      } else if (type === 'number') {
+        playerList.sort((a, b) => back ? b.number - a.number : a.number - b.number)
+      } else if (type === 'date') {
+        playerList.sort((a, b) => back ? b.date - a.date : a.date - b.date)
+      } else if (type === 'name') {
+        playerList.sort((a, b) => {
+          if (a.username > b.username) {
+            return back ? -1 : 1
+          }
+          if (a.username < b.username) {
+            return back ? 1 : -1
+          }
+          return 0;
+        });
+      }
+      sort.back = back
+      myView.renderScoreTable(playerList)
+    }
+  }
+
+
+  /* -------- end model -------- */
+  /* ----- begin controller ---- */
+  function ScoreController() {
+    let myContainer = null;
+    let myModel = null;
+    let thead = null
+
+    this.init = function (container, model) {
+      myContainer = container;
+      myModel = model;
+      thead = myContainer.querySelector('thead')
+      thead.addEventListener('click', this.sortFor)
+
+      // sortBtns = Array.from(myContainer.querySelector('.btn__sort'))
+      // .forEach((el) => {
+      //   el.addEventListener('click', console.log(1))
+      // })
+    }
+    this.sortList = function (e) {
+      e.preventDefault()
+      console.log(e);
+      myModel.sortList(e.dataset.sort)
+    }
+    this.sortFor = function (e) {
+      e.preventDefault()
+      if (e.target.dataset.sort) {
+        myModel.sortFor(e.target.dataset.sort)
+      }
+    }
+
+  };
+
+  return {
+    init: function () {
+      let container = document.querySelector('#content')
+
+      const view = new ScoreView();
+      const model = new ScoreModel();
+      const controller = new ScoreController();
+
+      //связываем части модуля
+      view.init(container);
+      model.init(view);
+      controller.init(container, model);
+
+
+      // myAppDB.ref('players/' + 'testplayer').set({
+      //   username: 'test',
+      //   score: '0004'
+      // })
+    },
+
+  };
+
+}());
 
 
 
@@ -682,13 +928,14 @@ const mySPA = (function () {
     }
 
     this.updateState = function (pageName) {
-
       myModuleView.renderContent(pageName);
 
-      if (pageName === 'main') {
+      if (pageName === 'main' || !pageName) {
         tetris.init()
       } else if (pageName === 'setting') {
         gameSetting.init()
+      } else if (pageName === 'check') {
+        scoreTable.init()
       }
     }
     // this.closeModal = function () {
@@ -726,6 +973,15 @@ const mySPA = (function () {
       routes,
       components
     }) {
+      if (!localStorage.getItem('setting')) {
+        localStorage.setItem('setting', JSON.stringify({
+          time: 500,
+          keyRotate: 'Space',
+          keyLeft: 'ArrowLeft',
+          keyRight: 'ArrowRight',
+          keyDown: 'ArrowDown',
+        }))
+      }
       this.renderComponents(container, components);
 
       const view = new ModuleView();

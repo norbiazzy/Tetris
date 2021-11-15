@@ -1,34 +1,52 @@
-const HomePage = {
-  id: "main",
+const GamePage = {
+  id: "game",
   title: "Tetris",
   render: (className = "container", ...rest) => {
     return `
     <section class="game ${className}">
-      <canvas class="game__canvas" id="game-canvas"></canvas>
-      <aside class="game__bar">
-        <div class="game__info">
-          <h3 class="game__title">Norbi</h3>
-          <p class="game__score">Уровень: <span id='level'>1</span></p>
-          <p class="game__score">Счет: <span id='score'>0000</span></p>
-          <p class="game__score">Линии: <span id='line'>0</span></p>
-          <div>
-            <canvas class=" game__canvas_small" id="canvas-next-tetra"></canvas>
+      <div class="game__wrapper">
+        <canvas class="game__canvas" id="game-canvas"></canvas>
+        <aside class="game__bar">
+          <div class="game__info">
+            <h3 class="game__title">Tetris</h3>
+            <p class="game__score">Уровень: <span id='level'>1</span></p>
+            <p class="game__score">Счет: <span id='score'>0000</span></p>
+            <p class="game__score">Линии: <span id='line'>0</span></p>
+            <div>
+              <canvas class=" game__canvas_small" id="canvas-next-tetra"></canvas>
+            </div>
           </div>
-        </div>
-        <div class="game__btns">
-          <form class="game__form hide">
-            <label class="game__subtitle">Ведите имя:</label>
-            <input class="game__item" type="text" placeholder='Username' name="username" id="username">
-            <input type="button" value="Сохранить результат" disabled="true" class="game__item hide" id="save-score-btn">
-          </form>
-          <button class="game__item hide" id="pause-button">Пауза</button>
-          <button class="game__item" id="newGame-button">Новая игра</button>
-        </div>
-      </aside>
+          <div class="game__btns">
+            <form class="game__form hide">
+              <label class="game__subtitle">Ведите имя:</label>
+              <input class="game__item" type="text" placeholder='Username' name="username" id="username">
+              <input type="button" value="Сохранить результат" disabled="true" class="game__item hide" id="save-score-btn">
+            </form>
+            <button class="game__item hide" id="pause-button">Пауза</button>
+            <button class="game__item" id="newGame-button">Новая игра</button>
+          </div>
+        </aside>
+      </div>
     </section>
     `;
   }
 };
+
+const HomePage = {
+  id: "home",
+  title: "Галавная страница",
+  render: (className = "container", ...rest) => {
+    return `
+    <section class="main ${className}">
+      
+    </section>
+    `;
+  }
+};
+
+
+
+
 const SettingPage = {
   id: "setting",
   title: "Настройки Tetris",
@@ -59,6 +77,24 @@ const SettingPage = {
           <input class="setting__input setting__input_checkbox" type="checkbox" id="setting-cells" value="true" data-control="isDrowCells">
           <span class="checkbox"></span>
         </label>
+        
+        <label class="setting__item setting__power-down">Музыка
+          <input class="setting__input setting__input_checkbox" type="checkbox" id="setting-music" value="true" data-control="music">
+          <span class="checkbox"></span>
+        </label>
+        <label class="setting__item setting__power-down">Звуки
+          <input class="setting__input setting__input_checkbox" type="checkbox" id="setting-sound" value="true" data-control="sound">
+          <span class="checkbox"></span>
+        </label>
+
+        <label class="setting__item setting__power-down">Громкость Музыки
+          <input type="range" id="setting-range-music" min="0" max="0.3" step="0.01" data-control="musicVol">
+        </label>
+
+        <label class="setting__item setting__power-down">Громкость звуков
+          <input type="range" id="setting-range-sound" min="0" max="0.3" step="0.01" data-control="soundVol">
+        </label>
+          
         <input class="setting__item setting__btn setting__reset" id="setting-reset" type="button" value="Cбросить настройки">
       </form>
     </div>
@@ -86,18 +122,20 @@ const CheckPage = {
   render: (className = "container", ...rest) => {
     return `
       <section class="${className}">
-      <h2>Таблица лидеров</h2>
-        <table class="check__table">
-          <thead class="check__head">
-            <tr class="check__row">
-              <th><button class="btn__sort" data-sort="number">#</button></th>
-              <th><button class="btn__sort" data-sort="date">Дата</button></th>
-              <th><button class="btn__sort" data-sort="name">Имя Игрока</button></th>
-              <th><button class="btn__sort" data-sort="score">Счет</button></th>
-            </tr>
-          </thead>
-          <tbody class="check__body"></tbody>
-        </table>
+      <div class="check__wrapper wrapper">
+        <h2>Таблица лидеров</h2>
+          <table class="check__table">
+            <thead class="check__head">
+              <tr class="check__row">
+                <th><button class="btn__sort" data-sort="number">#</button></th>
+                <th><button class="btn__sort" data-sort="date">Дата</button></th>
+                <th><button class="btn__sort" data-sort="name">Имя Игрока</button></th>
+                <th><button class="btn__sort" data-sort="score">Счет</button></th>
+              </tr>
+            </thead>
+            <tbody class="check__body"></tbody>
+          </table>
+        </div>
       </section>
     `;
   }

@@ -14,7 +14,8 @@ const NavBar = {
     return `
       <nav class="mainmenu ${customClass}" id="mainmenu">
         <ul class="mainmenu__list">
-          <li><a class="mainmenu__link" href="#main">Игра</a></li>
+        <li><a class="mainmenu__link" href="#main">Галавная страница</a></li>
+          <li><a class="mainmenu__link" href="#game">Игра</a></li>
           <li><a class="mainmenu__link" href="#setting">Настройки</a></li>
           <li><a class="mainmenu__link" href="#help">Помощь</a></li>
           <li><a class="mainmenu__link" href="#check">Счет</a></li>

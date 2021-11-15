@@ -5,11 +5,15 @@ body {
   box-sizing: border-box;
   font-family: "Exo 2", sans-serif;
   overflow-x: hidden;
-}
+  background-image: url('../images/tetris-blocks-cube-pattern-cro-design.jpg');
+  text-shadow: white;
 
+}
 .wrapper {
-  max-width: 1200;
-  padding: 0 15px;
+  margin: auto;
+  max-width: 1200px;
+  padding: 20px;
+  background-color: white ;
 }
 
 *,
@@ -33,7 +37,6 @@ table {
 .app {
   height: 100vh;
   overflow: hidden;
-  padding: 0px 20px;
   display: flex;
   min-height: 100vh;
   min-width: 100%;
@@ -48,8 +51,11 @@ table {
 
 .header>a {
   font-size: 28px;
-  color: black;
+  color: white;
   text-decoration: none;
+}
+.header>a:hover {
+  text-shadow: 0 0 5px white;
 }
 
 .title {
@@ -57,7 +63,19 @@ table {
   text-align: center;
 }
 
+.main__canvas {
+  
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #eee;
+  z-index: -1;
+}
+
+
 .mainmenu__list {
+  background-color: white;
   padding: 0;
   margin: 0;
   list-style: none;
@@ -104,7 +122,12 @@ table {
   display: flex;
   justify-content: center;
 }
-
+.game__wrapper {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  background-color: white;
+}
 .game__canvas {
   border: 2px solid;
 }
@@ -146,8 +169,10 @@ table {
 }
 
 .setting__form {
+  padding: 20px;
   display: flex;
   flex-direction: column;
+  background-color: white;
 }
 
 .setting__item {
@@ -257,6 +282,13 @@ table {
   text-align: center;
 }
 .check__table {
+  margin: auto;
+}
+.check__wrapper {
+  padding: 20px;
+  background-color: white;
+}
+.check__wrapper h2 {
   margin: auto;
 }
 

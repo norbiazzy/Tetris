@@ -9,11 +9,15 @@ body {
   text-shadow: white;
 
 }
+a{
+  text-decoration: none;
+}
 .wrapper {
   margin: auto;
   max-width: 1200px;
   padding: 20px;
-  background-color: white ;
+  background-color: white;
+  border-radius: 5px;
 }
 
 *,
@@ -21,19 +25,26 @@ body {
 *:after {
   box-sizing: inherit;
 }
-button, input {
+
+button,
+input {
   background-color: #000;
   color: #fff;
 }
-button:hover, input:hover {
+
+.game__item:hover, button:hover,
+input:hover {
   color: #000;
   background-color: #fff;
   transition: all 0.2s;
   cursor: pointer;
+  border: 1px solid black;
 }
+
 table {
   font-size: 20px;
 }
+
 .app {
   height: 100vh;
   overflow: hidden;
@@ -49,11 +60,22 @@ table {
   text-align: center;
 }
 
+footer {
+  padding: 10px 20px;
+  color: white;
+  text-shadow: 0, 0, 7px, black;
+}
+
+footer>p {
+  text-shadow: 0 0 20px black;
+}
+
 .header>a {
-  font-size: 28px;
+  font-size: 48px;
   color: white;
   text-decoration: none;
 }
+
 .header>a:hover {
   text-shadow: 0 0 5px white;
 }
@@ -64,7 +86,7 @@ table {
 }
 
 .main__canvas {
-  
+
   height: 100vh;
   position: absolute;
   top: 0;
@@ -76,16 +98,20 @@ table {
 
 .mainmenu__list {
   background-color: white;
-  padding: 0;
-  margin: 0;
+  padding: 20px;
+  margin: auto;
   list-style: none;
+  font-size: 20px;
   border: 1px gray solid;
+  border-radius: 5px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  text-align: center;
 }
 
 .mainmenu li {
   list-style: none;
+  width: 100%;
 }
 
 .mainmenu__link {
@@ -108,6 +134,7 @@ table {
 }
 
 .content {
+  margin: auto;
   padding: 1.5em 0;
   flex-grow: 1;
 }
@@ -122,12 +149,15 @@ table {
   display: flex;
   justify-content: center;
 }
+
 .game__wrapper {
   padding: 20px;
   display: flex;
   justify-content: center;
+  border-radius: 5px;
   background-color: white;
 }
+
 .game__canvas {
   border: 2px solid;
 }
@@ -146,24 +176,36 @@ table {
   display: flex;
   flex-direction: column;
 }
+
 .game__form {
   display: flex;
   flex-direction: column;
 }
+
 .game__title {}
 
-.game__score {}
+.game__score {
+  margin: 0;
+  padding: 10px;
+}
+
 .game__subtitle {
   margin-bottom: 10px;
 }
+
 .game__item {
+  border: 1px solid;
   display: block;
   margin-bottom: 20px;
   width: 200px;
   padding: 10px;
+  background-color: #000;
+  color: #fff;
+  text-align: center;
 }
 
 .setting {
+  font-size: 20px;
   display: flex;
   justify-content: center;
 }
@@ -173,6 +215,7 @@ table {
   display: flex;
   flex-direction: column;
   background-color: white;
+  border-radius: 5px;
 }
 
 .setting__item {
@@ -183,27 +226,47 @@ table {
 
 .setting__btn {
   display: block;
+  border: 1px solid black;
+  text-align: center;
+  color: #FFF;
+  background-color: #000;
+  padding: 7px 2px;
+}
+.setting__btn:hover {
+  color: #000;
+  background-color: #fff;
+  border: 1px solid black;
 }
 
 .setting__input {
-  width: 100px;
+  width: 140px;
   margin-left: 20px;
   text-align: center;
+  border: 1px solid black;
 }
+
 .setting__input_checkbox {
   position: absolute;
   width: 0;
   height: 0;
 }
+/* .setting__link {
+  border: 1px solid black;
+  text-align: center;
+  color: #FFF;
+  background-color: #000;
+} */
+
 .checkbox {
   cursor: pointer;
   position: relative;
   margin: 0 30px;
   width: 42px;
   height: 20px;
-  background-color:rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.7);
   border-radius: 10px;
 }
+
 .checkbox::after {
   content: '';
   position: absolute;
@@ -211,10 +274,11 @@ table {
   top: 2px;
   width: 16px;
   height: 16px;
-  background-color:#fff;
+  background-color: #fff;
   border-radius: 10px;
   transition: all .2s;
 }
+
 .setting__input_checkbox:checked+.checkbox::after {
   background-color: #fc3;
   left: 24px;
@@ -281,13 +345,16 @@ table {
 .check-page {
   text-align: center;
 }
+
 .check__table {
   margin: auto;
 }
+
 .check__wrapper {
   padding: 20px;
   background-color: white;
 }
+
 .check__wrapper h2 {
   margin: auto;
 }
@@ -316,9 +383,17 @@ tr {
   box-sizing: border-box;
   /* background-color: white; */
 }
+
 /* .btn__sort:hover {
   background-color: black;
   color: white;
   cursor: pointer;
   transition: all 0.3s;
 } */
+.input-try {
+  box-shadow: 0 0 7px rgb(0, 255, 0);
+}
+.input-error { 
+  box-shadow: 0 0 7px rgb(255, 0, 0);
+
+}

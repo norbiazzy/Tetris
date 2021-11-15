@@ -13,7 +13,7 @@ const myAppDB = firebase.database();
 // Список компонент (from components.js)
 const components = {
   header: Header,
-  navbar: NavBar,
+  // navbar: NavBar,
   content: Content,
   footer: Footer,
   modal: WarnModal,
@@ -57,22 +57,16 @@ const mySPA = (function () {
 
       window.document.title = routesObj[routeName].title;
       contentContainer.innerHTML = routesObj[routeName].render(`${routeName}-page`);
-      this.updateButtons(routesObj[routeName].id);
+      // this.updateButtons(routesObj[routeName].id);
     }
 
-    this.updateButtons = function (currentPage) {
-      const menuLinks = menu.querySelectorAll(".mainmenu__link");
+    // this.updateButtons = function (currentPage) {
+    //   const menuLinks = menu.querySelectorAll(".mainmenu__link");
 
-      for (let link of menuLinks) {
-        currentPage === link.getAttribute("href").slice(1) ? link.classList.add("active") : link.classList.remove("active");
-      }
-    }
-    this.showModal = function () {
-      warnModal.classList.remove('hide')
-    }
-    this.hideModal = function () {
-      warnModal.classList.add('hide')
-    }
+    //   for (let link of menuLinks) {
+    //     currentPage === link.getAttribute("href").slice(1) ? link.classList.add("active") : link.classList.remove("active");
+    //   }
+    // }
   };
   /* -------- end view --------- */
   /* ------- begin model ------- */
@@ -145,7 +139,6 @@ const mySPA = (function () {
           soundVol: 0.4,
         }))
       }
-      // audio.init()
 
       this.renderComponents(container, components);
 

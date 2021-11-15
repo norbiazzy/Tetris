@@ -8,6 +8,7 @@ const tetris = (function () {
     let btnNewGame = null
     let btnSaveScore = null
     let form = null
+    let inputUserName = null
     let = false
     let splashScreen = true
     const colors = ['#00F0F0', '#F0A000', '#0000F0', '#F0F000', '#00F000', '#F00000', '#52007B'];
@@ -35,7 +36,9 @@ const tetris = (function () {
       myContainer = container
       btnCheckState = myContainer.querySelector('#pause-button')
       btnSaveScore = myContainer.querySelector('#save-score-btn')
+
       form = myContainer.querySelector('.game__form')
+      inputUserName = myContainer.querySelector('#username')
       canvas.score = myContainer.querySelector('#score')
       canvas.level = myContainer.querySelector('#level')
       canvas.line = myContainer.querySelector('#line')
@@ -71,6 +74,8 @@ const tetris = (function () {
 
     }
     this.startNewGame = function () {
+      inputUserName.classList.remove('input-try')
+      inputUserName.classList.remove('input-error')
       this.clearBord()
       btnCheckState.classList.remove('hide')
       form.classList.add('hide')
@@ -164,6 +169,17 @@ const tetris = (function () {
     this.btnSaveState = function (str) {
       btnSaveScore.disabled = str
     }
+    this.userExists = function (user) {
+      if (user) {
+        inputUserName.classList.remove('input-try')
+        inputUserName.classList.add('input-error')
+      } else {
+        inputUserName.classList.remove('input-error')
+        inputUserName.classList.add('input-try')
+        btnSaveScore.classList.add('hide')
+      }
+
+    }
   }
 
   function GameModel() {
@@ -203,75 +219,75 @@ const tetris = (function () {
     }
 
     let tetraminos = [{
-      name: 'I',
-      table: [
-        [0, 0, 1, 0],
-        [0, 0, 1, 0],
-        [0, 0, 1, 0],
-        [0, 0, 1, 0],
-      ],
-      posX: 3,
-      posY: -4,
-    },
-    {
-      name: "L",
-      table: [
-        [0, 0, 2],
-        [2, 2, 2],
-        [0, 0, 0],
-      ],
-      posX: 3,
-      posY: -2,
-    },
-    {
-      name: 'J',
-      table: [
-        [3, 0, 0],
-        [3, 3, 3],
-        [0, 0, 0],
-      ],
-      posX: 3,
-      posY: -2,
-    },
-    {
-      name: 'O',
-      table: [
-        [4, 4],
-        [4, 4],
-      ],
-      posX: 4,
-      posY: -2,
-    },
-    {
-      name: 'S',
-      table: [
-        [0, 5, 5],
-        [5, 5, 0],
-        [0, 0, 0],
-      ],
-      posX: 3,
-      posY: -2,
-    },
-    {
-      name: 'Z',
-      table: [
-        [6, 6, 0],
-        [0, 6, 6],
-        [0, 0, 0],
-      ],
-      posX: 3,
-      posY: -2,
-    },
-    {
-      name: 'T',
-      table: [
-        [0, 7, 0],
-        [7, 7, 7],
-        [0, 0, 0],
-      ],
-      posX: 3,
-      posY: -2,
-    }
+        name: 'I',
+        table: [
+          [0, 0, 1, 0],
+          [0, 0, 1, 0],
+          [0, 0, 1, 0],
+          [0, 0, 1, 0],
+        ],
+        posX: 3,
+        posY: -4,
+      },
+      {
+        name: "L",
+        table: [
+          [0, 0, 2],
+          [2, 2, 2],
+          [0, 0, 0],
+        ],
+        posX: 3,
+        posY: -2,
+      },
+      {
+        name: 'J',
+        table: [
+          [3, 0, 0],
+          [3, 3, 3],
+          [0, 0, 0],
+        ],
+        posX: 3,
+        posY: -2,
+      },
+      {
+        name: 'O',
+        table: [
+          [4, 4],
+          [4, 4],
+        ],
+        posX: 4,
+        posY: -2,
+      },
+      {
+        name: 'S',
+        table: [
+          [0, 5, 5],
+          [5, 5, 0],
+          [0, 0, 0],
+        ],
+        posX: 3,
+        posY: -2,
+      },
+      {
+        name: 'Z',
+        table: [
+          [6, 6, 0],
+          [0, 6, 6],
+          [0, 0, 0],
+        ],
+        posX: 3,
+        posY: -2,
+      },
+      {
+        name: 'T',
+        table: [
+          [0, 7, 0],
+          [7, 7, 7],
+          [0, 0, 0],
+        ],
+        posX: 3,
+        posY: -2,
+      }
 
     ]
     let nextTetra = {}
@@ -279,10 +295,9 @@ const tetris = (function () {
     this.init = function (view) {
       myView = view
       setting = JSON.parse(localStorage.getItem('setting'))
-
       board.time = setting.time
       board.isDrowCells = setting.isDrowCells
-      console.log(setting);
+
       if (setting.music) {
         sounds.start.volume = +setting.musicVol
         sounds.gameOver.volume = +setting.musicVol
@@ -301,8 +316,6 @@ const tetris = (function () {
         sounds.levelUp.volume = 0
 
       }
-      curTetra = this.getRandomTetra()
-      board.table = this.clearBoardTable()
       myView.setSize(board, boardNextTetra, board.isDrowCells)
       this.splashScreen()
 
@@ -324,11 +337,12 @@ const tetris = (function () {
         myView.renderNexTetra(nextTetra)
         this.startAnimation()
       }, 100);
-      if (isSplashScreen == 1 ) return
+      if (isSplashScreen == 1) return
       sounds.start.play()
       myView.playGame()
       myView.startNewGame()
       myView.renderStats('0000')
+      isSplashScreen = false
     }
 
     this.splashScreen = function () {
@@ -407,16 +421,6 @@ const tetris = (function () {
         this.startAnimation()
       }
     }
-    // this.pauseGame = function () {
-    //   myView.stopGame()
-    //   board.isPlay = false
-    //   clearInterval(ani)
-    // }
-    // this.returnGame = function () {
-    //   myView.playGame()
-    //   board.isPlay = true
-    //   this.startAnimation()
-    // }
 
     this.startAnimation = function () {
       clearInterval(ani)
@@ -484,14 +488,14 @@ const tetris = (function () {
         curTetra.posX -= 1
       }
     }
-    
+
     this.colizz = function () {
       for (let y = 0; y < curTetra.table.length; y++) { // проверяем каждую строку
         for (let x = 0; x < curTetra.table[y].length; x++) { // проверяем каждый элемент в строке
           if (
             curTetra.table[y][x] && // существует ли такой элемент в игровом поле
             ((board.table[curTetra.posY + y] === undefined || // строка вне пределов игрового поля
-              board.table[curTetra.posY + y][curTetra.posX + x] === undefined) || // элемент вне пределов игрового поля
+                board.table[curTetra.posY + y][curTetra.posX + x] === undefined) || // элемент вне пределов игрового поля
               board.table[curTetra.posY + y][curTetra.posX + x]) // занята ли ячейка
           ) {
             return true
@@ -605,16 +609,26 @@ const tetris = (function () {
       }
       myView.reDraw(this.calcCords())
     }
+    this.userExists = function (username) {
+      myAppDB.ref('players/' + `player_${username.replace(/\s/g, "").toLowerCase()}`).get()
+      .then(snapshot => {
+          if (snapshot.val()) myView.userExists(true)
+          else this.saveScore(username)
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    }
     this.saveScore = function (username) {
       let date = Date.parse(new Date)
       myAppDB.ref('players/' + `player_${username.replace(/\s/g, "").toLowerCase()}`).set({
-        username: `${username}`,
-        score: `${board.score}`,
-        date: date
-      })
+          username: `${username}`,
+          score: `${board.score}`,
+          date: date
+        })
         .then((username) => console.log('ADD'))
         .catch((error) => console.error(error))
-
+      myView.userExists(false)
     }
     this.validName = function (str) {
       myView.btnSaveState(!str)
@@ -647,7 +661,7 @@ const tetris = (function () {
       btnCheckState.addEventListener('click', this.stateGame)
 
       btnSaveScore = myContainer.querySelector('#save-score-btn')
-      btnSaveScore.addEventListener('click', this.saveScore)
+      btnSaveScore.addEventListener('click', this.userExists)
 
       btnNewGame = myContainer.querySelector('#newGame-button')
       btnNewGame.addEventListener('click', this.newGame)
@@ -669,9 +683,9 @@ const tetris = (function () {
       btnNewGame.removeEventListener('click', this.newGame)
       document.removeEventListener('keydown', self.moveFigure)
     }
-    this.saveScore = function (e) {
+    this.userExists = function (e) {
       e.preventDefault()
-      myModel.saveScore(playerNameInput.value)
+      myModel.userExists(playerNameInput.value)
     }
     this.stateGame = function () {
       myModel.stateGame()

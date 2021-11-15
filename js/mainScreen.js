@@ -1,3 +1,77 @@
+const mainScreen = (function () {
+
+  function MainView() {
+    let myContainer = null
+
+    this.init = function (container) {
+      myContainer = container
+    }
+  }
+
+  function MainModel() {
+    let myView = null
+
+
+    this.init = function (view) {
+      myView = view
+    }
+
+  }
+
+  function MainControoller() {
+    let myContainer = null,
+      myModel = null
+
+    this.init = function (container, model) {
+      myContainer = container
+      myModel = model
+      myModel.setSize(document.documentElement.clientHeight, document.documentElement.clientWidth)
+      window.addEventListener('resize', this.setSize)
+    }
+    this.setSize = function (e) {
+      let height = e.target.document.documentElement.clientHeight
+      let width = e.target.document.documentElement.clientWidth
+      myModel.setSize(height, width)
+    }
+
+  }
+
+  return {
+    init: function () {
+      const container = document.querySelector('#content')
+      const view = new MainView();
+      const model = new MainModel();
+      const controller = new MainControoller();
+      //связываем части модуля
+      view.init(container);
+      model.init(view);
+      controller.init(container, model)
+    },
+  }
+})()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // const mainScreen = (function () {
 
 //   function MainView() {

@@ -24,6 +24,7 @@ const GamePage = {
             </form>
             <button class="game__item hide" id="pause-button">Пауза</button>
             <button class="game__item" id="newGame-button">Новая игра</button>
+            <p><a class="game__item" href="#main">Глвное меню</a></p>
           </div>
         </aside>
       </div>
@@ -38,14 +39,24 @@ const HomePage = {
   render: (className = "container", ...rest) => {
     return `
     <section class="main ${className}">
-      
-    </section>
-    `;
+      <nav class="mainmenu" id="mainmenu">
+      <ul class="mainmenu__list">
+          
+          <li><h2> Главное меню </h2></li>
+          <li><a class="mainmenu__link" href="#game">Игра</a></li>
+          <li><a class="mainmenu__link" href="#setting">Настройки</a></li>
+          <li><a class="mainmenu__link" href="#help">Помощь</a></li>
+          <li><a class="mainmenu__link" href="#check">Счет</a></li>
+        </ul>
+        </nav>
+        </section>
+        `;
   }
 };
 
 
 
+// <li><a class="mainmenu__link" href="#main">Галавная страница</a></li>
 
 const SettingPage = {
   id: "setting",
@@ -96,6 +107,7 @@ const SettingPage = {
         </label>
           
         <input class="setting__item setting__btn setting__reset" id="setting-reset" type="button" value="Cбросить настройки">
+        <a class="setting__item setting__btn" href="#main">Глвное меню</a>
       </form>
     </div>
       </section>

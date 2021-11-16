@@ -24,14 +24,15 @@ const GamePage = {
             </form>
             <button class="game__item hide" id="pause-button">Пауза</button>
             <button class="game__item" id="newGame-button">Новая игра</button>
-            <p><a class="game__item" href="#main">Глвное меню</a></p>
+            <p><a class="game__item game__item_last" href="#main">Глвное меню</a></p>
           </div>
         </aside>
       </div>
     </section>
-    `;
-  }
-};
+            `;
+          }
+        };
+        // <button class="game__item" href="#main">Глвное меню</button>
 
 const HomePage = {
   id: "home",

@@ -74,6 +74,7 @@ const tetris = (function () {
 
     }
     this.startNewGame = function () {
+      canvasAd.el.style.display = 'block'
       inputUserName.classList.remove('input-try')
       inputUserName.classList.remove('input-error')
       this.clearBord()
@@ -81,6 +82,7 @@ const tetris = (function () {
       form.classList.add('hide')
     }
     this.gameOver = function (splashScreen) {
+      canvasAd.el.style.display = 'none'
       let ctx = canvas.ctx
       if (!splashScreen) {
         btnCheckState.classList.add('hide')

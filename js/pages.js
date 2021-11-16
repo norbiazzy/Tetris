@@ -136,7 +136,7 @@ const CheckPage = {
     return `
       <section class="${className}">
       <div class="check__wrapper wrapper">
-        <h2>Таблица лидеров</h2>
+        <h2 class="check__title">Таблица лидеров</h2>
           <table class="check__table">
             <thead class="check__head">
               <tr class="check__row">

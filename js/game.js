@@ -97,12 +97,12 @@ const tetris = (function () {
       }
       setTimeout(() => {
         ctx.fillStyle = 'black'
-        ctx.fillRect(2, 250, 316, 100)
-        ctx.font = '46px Arial';
+        ctx.fillRect(2, canvas.height/2 - canvas.cellSize*2, canvas.width-4, canvas.cellSize*3)
+        ctx.font = `${canvas.cellSize*1.55}px Arial`;
         ctx.textAlign = 'center'
         ctx.fillStyle = 'black';
         ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2);
-        ctx.font = '48px Arial';
+        ctx.font = `${canvas.cellSize*1.5}px Arial`;
         ctx.fillStyle = 'red';
         ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2);
       }, 0);
@@ -324,11 +324,11 @@ const tetris = (function () {
     }
     this.setSize = function (height, width) {
       if (width >= 1400) {
-        board.cellSize = 32
+        board.cellSize = 36
         boardNextTetra.cellSize = 40
       } else if (width >= 1200) {
-        board.cellSize = 28
-        boardNextTetra.cellSize = 36
+        board.cellSize = 22
+        boardNextTetra.cellSize = 24
       } else if (width >= 992) {
         board.cellSize = 24
         boardNextTetra.cellSize = 32

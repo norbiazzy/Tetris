@@ -132,9 +132,9 @@ const tetris = (function () {
         for (let x = 0; x < table.length; x++) {
           if (table[y][x]) {
             ctx.fillStyle = 'black'
-            ctx.fillRect(x * block + 5, y * block + 5, block + 1, block + 1)
+            ctx.fillRect(x * block + 1, y * block + 1, block + 1, block + 1)
             ctx.fillStyle = colors[table[y][x] - 1]
-            ctx.fillRect(x * block + 6, y * block + 6, block - 1, block - 1)
+            ctx.fillRect(x * block + 2, y * block + 2, block - 1, block - 1)
           }
         }
       }
@@ -192,19 +192,19 @@ const tetris = (function () {
     let setting = {}
     let curTetra = null
     const sounds = {
-      drop: new Audio('../drop.mp3'),
-      gameOver: new Audio('../game-over.mp3'),
-      levelUp: new Audio('../level-up.mp3'),
-      move: new Audio('../move.mp3'),
-      start: new Audio('../start.mp3')
+      drop: new Audio('../sounds/drop.mp3'),
+      gameOver: new Audio('../sounds/gameOver.mp3'),
+      levelUp: new Audio('../sounds/levelUp.mp3'),
+      move: new Audio('../sounds/move.mp3'),
+      start: new Audio('../sounds/start.mp3')
     }
     let board = {
-      width: 320,
-      height: 640,
+      width: null,
+      height: null,
       table: null,
       row: 20,
       col: 10,
-      cellSize: 32,
+      cellSize: null,
       isPlay: false,
       score: 0,
       level: 1,
@@ -316,11 +316,28 @@ const tetris = (function () {
         sounds.levelUp.volume = 0
 
       }
-      myView.setSize(board, boardNextTetra, board.isDrowCells)
       this.splashScreen()
 
     }
-
+    this.setSize = function (height, width) {
+      if (width >= 1400) {
+        board.cellSize = 32
+        boardNextTetra.cellSize = 40
+      } else if (width >= 1200) {
+        board.cellSize = 28
+        boardNextTetra.cellSize = 36
+      } else if (width >= 992) {
+        board.cellSize = 24
+        boardNextTetra.cellSize = 32
+      } else {
+        board.cellSize = 20
+        boardNextTetra.cellSize = 28
+      }
+      board.height = board.cellSize * board.row
+      board.width = board.cellSize * board.col
+      boardNextTetra.width = boardNextTetra.height = boardNextTetra.cellSize * 4 + 2
+      myView.setSize(board, boardNextTetra, board.isDrowCells)
+    }
     this.startNewGame = function () {
       if (isSplashScreen) clearInterval(splashScreenId)
       board.score = 0
@@ -611,7 +628,7 @@ const tetris = (function () {
     }
     this.userExists = function (username) {
       myAppDB.ref('players/' + `player_${username.replace(/\s/g, "").toLowerCase()}`).get()
-      .then(snapshot => {
+        .then(snapshot => {
           if (snapshot.val()) myView.userExists(true)
           else this.saveScore(username)
         })
@@ -669,7 +686,7 @@ const tetris = (function () {
       window.addEventListener("hashchange", this.exitGame, {
         once: true
       });
-
+      myModel.setSize(document.documentElement.clientHeight, document.documentElement.clientWidth)
     }
     this.validInput = function (e) {
       e.preventDefault()

@@ -1,17 +1,19 @@
 html,
 body {
   margin: 0;
-  min-height: 100vh;
+  /* height: 100vh; */
   box-sizing: border-box;
   font-family: "Exo 2", sans-serif;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   background-image: url('../images/tetris-blocks-cube-pattern-cro-design.jpg');
   text-shadow: white;
 
 }
-a{
+
+a {
   text-decoration: none;
 }
+
 .wrapper {
   margin: auto;
   max-width: 1200px;
@@ -32,7 +34,8 @@ input {
   color: #fff;
 }
 
-.game__item:hover, button:hover,
+.game__item:hover,
+button:hover,
 input:hover {
   color: #000;
   background-color: #fff;
@@ -46,11 +49,11 @@ table {
 }
 
 .app {
-  height: 100vh;
-  overflow: hidden;
+  /* height: 100vh; */
+  /* overflow: hidden; */
   display: flex;
-  min-height: 100vh;
-  min-width: 100%;
+  /* min-height: 100vh; */
+  /* min-width: 100%; */
   flex-direction: column;
   justify-content: space-between;
 }
@@ -66,7 +69,8 @@ footer {
   text-shadow: 0, 0, 7px, black;
 }
 
-footer>p {
+footer>p { 
+  margin: 0;
   text-shadow: 0 0 20px black;
 }
 
@@ -87,7 +91,7 @@ footer>p {
 
 .main__canvas {
 
-  height: 100vh;
+  /* height: 100vh; */
   position: absolute;
   top: 0;
   left: 0;
@@ -232,6 +236,7 @@ footer>p {
   background-color: #000;
   padding: 7px 2px;
 }
+
 .setting__btn:hover {
   color: #000;
   background-color: #fff;
@@ -250,6 +255,7 @@ footer>p {
   width: 0;
   height: 0;
 }
+
 /* .setting__link {
   border: 1px solid black;
   text-align: center;
@@ -301,8 +307,8 @@ footer>p {
 
 .modal__wrapper {
   position: absolute;
-  width: 100vw;
-  height: 100vh;
+  /* width: 100vw; */
+  /* height: 100vh; */
   transform: translate(-20px, -20px);
 }
 
@@ -365,6 +371,7 @@ footer>p {
 }
 
 .hide {
+  display: none;
   width: 0;
   position: absolute;
   visibility: hidden;
@@ -393,7 +400,39 @@ tr {
 .input-try {
   box-shadow: 0 0 7px rgb(0, 255, 0);
 }
-.input-error { 
+
+.input-error {
   box-shadow: 0 0 7px rgb(255, 0, 0);
 
+}
+
+@media (min-width: 1400) {
+  .header>a {
+    font-size: 30px;
+    color: blue;
+  }
+}
+
+@media (min-width: 1200px) {
+  .header {
+    padding: 10px;
+  }
+  .header>a {
+    font-size: 30px;
+    color: yellow;
+  }
+}
+
+@media (max-width: 922px) {
+  .header>a {
+    font-size: 30px;
+    color: red;
+  }
+}
+
+@media (min-width: 922px) {
+  .header>a {
+    font-size: 30px;
+    color: wheat;
+  }
 }

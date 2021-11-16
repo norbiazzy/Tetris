@@ -1,3 +1,9 @@
+const drop = new Audio('sounds/drop.mp3'),
+  gameOver = new Audio('sounds/gameOver.mp3'),
+  levelUp = new Audio('sounds/levelUp.mp3'),
+  move = new Audio('sounds/move.mp3'),
+  start = new Audio('sounds/start.mp3');
+
 const tetris = (function () {
   // это будем парсить из локала и заполнять при инициализации, если в локале пусто
 
@@ -193,13 +199,8 @@ const tetris = (function () {
     let isSplashScreen = false
     let setting = {}
     let curTetra = null
-    const sounds = {
-      drop: new Audio('sounds/drop.mp3'),
-      gameOver: new Audio('sounds/gameOver.mp3'),
-      levelUp: new Audio('sounds/levelUp.mp3'),
-      move: new Audio('sounds/move.mp3'),
-      start: new Audio('sounds/start.mp3')
-    }
+
+
     let board = {
       width: null,
       height: null,
@@ -301,21 +302,21 @@ const tetris = (function () {
       board.isDrowCells = setting.isDrowCells
 
       if (setting.music) {
-        sounds.start.volume = +setting.musicVol
-        sounds.gameOver.volume = +setting.musicVol
+        start.volume = +setting.musicVol
+        gameOver.volume = +setting.musicVol
       } else {
-        sounds.start.volume = 0
-        sounds.gameOver.volume = 0
+        start.volume = 0
+        gameOver.volume = 0
 
       }
       if (setting.sound) {
-        sounds.move.volume = +setting.soundVol
-        sounds.drop.volume = +setting.soundVol
-        sounds.levelUp.volume = +setting.soundVol
+        move.volume = +setting.soundVol
+        drop.volume = +setting.soundVol
+        levelUp.volume = +setting.soundVol
       } else {
-        sounds.move.volume = 0
-        sounds.drop.volume = 0
-        sounds.levelUp.volume = 0
+        move.volume = 0
+        drop.volume = 0
+        levelUp.volume = 0
 
       }
       this.splashScreen()
@@ -357,7 +358,7 @@ const tetris = (function () {
         this.startAnimation()
       }, 100);
       if (isSplashScreen == 1) return
-      sounds.start.play()
+      start.play()
       myView.playGame()
       myView.startNewGame()
       myView.renderStats('0000')
@@ -468,7 +469,7 @@ const tetris = (function () {
       if (board.line >= 10) {
         board.line %= 10
         board.level++
-        sounds.levelUp.play()
+        levelUp.play()
         board.time *= 0.8
         this.startAnimation()
         console.log(board.time);
@@ -542,7 +543,7 @@ const tetris = (function () {
       clearInterval(ani)
       board.isPlay = false
       if (!isSplashScreen) {
-        sounds.gameOver.play()
+        gameOver.play()
       }
       if (isSplashScreen == 2) {
         clearInterval(splashScreenId)
@@ -593,14 +594,14 @@ const tetris = (function () {
       if (this.colizz()) {
         curTetra.posY -= 1
         this.lock()
-        sounds.drop.play()
+        drop.play()
       } else this.jumpToDown()
 
     }
     this.keyMove = function (e) {
       if (!board.isPlay) return // если игра окончена
       if (setting.sound) {
-        let soundMove = sounds.move.cloneNode()
+        let soundMove = move.cloneNode()
         soundMove.volume = setting.soundVol
         soundMove.play()
       }

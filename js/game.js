@@ -194,11 +194,11 @@ const tetris = (function () {
     let setting = {}
     let curTetra = null
     const sounds = {
-      drop: new Audio('../sounds/drop.mp3'),
-      gameOver: new Audio('../sounds/gameOver.mp3'),
-      levelUp: new Audio('../sounds/levelUp.mp3'),
-      move: new Audio('../sounds/move.mp3'),
-      start: new Audio('../sounds/start.mp3')
+      drop: new Audio('sounds/drop.mp3'),
+      gameOver: new Audio('sounds/gameOver.mp3'),
+      levelUp: new Audio('sounds/levelUp.mp3'),
+      move: new Audio('sounds/move.mp3'),
+      start: new Audio('sounds/start.mp3')
     }
     let board = {
       width: null,

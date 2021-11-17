@@ -58,6 +58,7 @@ const gameSetting = (function () {
       sound: false,
       musicVol: 0.2,
       soundVol: 0.2,
+      isDrowCells: false
     }
     let customSetting = {
       time: 500,
@@ -70,6 +71,7 @@ const gameSetting = (function () {
       sound: false,
       musicVol: 0.2,
       soundVol: 0.2,
+      isDrowCells: false
     }
 
     this.init = function (view) {
@@ -88,11 +90,13 @@ const gameSetting = (function () {
       customSetting = JSON.parse(customSetting)
       myView.setSetting(customSetting)
     }
-    this.setLocalVal = function (dataKey, val) {
-      for (const key in customSetting) {
-        if (customSetting[key] == val) return
+    this.setLocalVal = function (control, val) {
+      if (control != 'music' && control != 'sound' && control != 'isDrowCells') {
+        for (const key in customSetting) {
+          if (customSetting[key] == val) return
+        }
       }
-      customSetting[dataKey] = val
+      customSetting[control] = val
       localStorage.setItem('setting', JSON.stringify(customSetting))
       myView.setSetting(customSetting)
     }

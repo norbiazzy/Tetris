@@ -107,6 +107,7 @@ const mySPA = (function () {
           keyRight: 'ArrowRight',
           keyDown: 'ArrowDown',
           keyPowerDown: 'Space',
+          isDrowCells: false,
           music: false,
           sound: false,
           musicVol: 0.4,

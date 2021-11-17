@@ -429,11 +429,10 @@ const tetris = (function () {
         board.line %= 10;
         board.level++;
         levelUp.play();
-        board.time *= 0.8;
+        board.time *= 0.9;
         this.startAnimation();
         console.log(board.time);
       }
-
       myView.renderStats(score, board.level, board.line);
     }
 
@@ -523,7 +522,7 @@ const tetris = (function () {
           }
         }
         if (count === 10) {
-          this.downBordArr(y);
+          this.downBoardArr(y);
           multiX++;
           board.line++;
         }
@@ -531,7 +530,7 @@ const tetris = (function () {
       if (multiX > -1) this.calcStats((2 ** multiX) * 10);
 
     }
-    this.downBordArr = function (i) {
+    this.downBoardArr = function (i) {
       let y = i;
       for (y; y > 0; y--) {
         for (let x = 0; x < board.table[y].length; x++) {

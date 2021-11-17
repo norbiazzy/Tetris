@@ -621,7 +621,7 @@ const tetris = (function () {
           score: `${board.score}`,
           date: date
         })
-        .then((username) => console.log('ADD'))
+        .then((username) => console.log('Пользователь добавлен'))
         .catch((error) => console.error(error))
       myView.userExists(false);
     }

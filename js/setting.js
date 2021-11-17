@@ -73,7 +73,7 @@ const gameSetting = (function () {
       soundVol: 0.2,
       isDrowCells: false
     }
-
+    let repeatingSettings = ['music', 'sound', 'isDrowCells', 'musicVol', 'soundVol', 'time']
     this.init = function (view) {
       myView = view
       if (localStorage.getItem('setting')) {
@@ -91,7 +91,7 @@ const gameSetting = (function () {
       myView.setSetting(customSetting)
     }
     this.setLocalVal = function (control, val) {
-      if (control != 'music' && control != 'sound' && control != 'isDrowCells') {
+      if (!repeatingSettings.find(el => el == control)) {
         for (const key in customSetting) {
           if (customSetting[key] == val) return
         }

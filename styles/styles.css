@@ -34,16 +34,6 @@ input {
   color: #fff;
 }
 
-.game__item:hover,
-button:hover,
-input:hover {
-  color: #000;
-  background-color: #fff;
-  transition: all 0.2s;
-  cursor: pointer;
-  border: 1px solid black;
-}
-
 table {
   font-size: 20px;
 }
@@ -59,7 +49,7 @@ table {
 }
 
 .header {
-  padding: 20px 0;
+  padding: 10px 0;
   text-align: center;
 }
 
@@ -69,7 +59,7 @@ footer {
   text-shadow: 0, 0, 7px, black;
 }
 
-footer>p { 
+footer>p {
   margin: 0;
   text-shadow: 0 0 20px black;
 }
@@ -190,28 +180,52 @@ footer>p {
   margin: 0;
 }
 
-.game__title {}
+.game__title {
+  margin: 10px 0;
+}
 
 .game__score {
-  margin: 10px 0;
+  margin: 5px 0;
 }
 
 .game__subtitle {
   margin-bottom: 10px;
 }
+
 .game__item {
   border: 1px solid;
   display: block;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   width: 200px;
   padding: 10px;
   background-color: #000;
   color: #fff;
   text-align: center;
 }
+
 .game__item_last {
   margin-bottom: 0;
 }
+
+.game__item:hover,
+button:hover,
+input:hover {
+  color: #000;
+  background-color: #fff;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: 1px solid black;
+}
+
+.game__item:disabled {
+  background-color: rgb(39, 39, 39);
+}
+
+.game__item:disabled:hover {
+  background-color: rgb(61, 61, 61);
+  color: rgb(163, 163, 163);
+}
+
 
 .setting {
   font-size: 20px;
@@ -356,9 +370,11 @@ footer>p {
 .check-page {
   text-align: center;
 }
-.check__title  {
+
+.check__title {
   margin: 0 auto 25px;
 }
+
 .check__table {
   margin: auto;
 }
@@ -413,41 +429,42 @@ tr {
 
 
 
-@media (min-width: 922px) {
-  .header>a {
-    font-size: 30px;
-    color: red;
-  }
-  .game__item {
-    margin-bottom: 10px;
-  }
-  .game__item_last {
-    margin-bottom: 0;
-  }
-  .game__title {
+@media (min-width: 1200px) {
+
+  .game__score {
     margin: 10px 0;
   }
-  .game__score {
-    margin: 5px 0;
-  }
-  
+
 }
+
 @media (min-width: 922px) {
-  .header {
+
+  /* .header {
     padding: 10px;
-  }
+  } */
   .header>a {
-    font-size: 40px;
-    color: yellow;
+    font-size: 30px;
   }
+
   .setting__form {
     font-size: 16px;
   }
+
+  .game__item {
+    margin-bottom: 10px;
+  }
+
+  .game__item_last {
+    margin-bottom: 0;
+  }
+
+  .game__title {
+    margin: 10px 0;
+  }
 }
 
-@media (min-width: 1400) {
+@media (min-width: 1400px) {
   .header>a {
     font-size: 48px;
-    color: blue;
   }
 }

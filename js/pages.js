@@ -68,7 +68,7 @@ const SettingPage = {
       <div class="setting">
       <form class="setting__form">
         <label class="setting__item setting__time">Время между фигурами
-          <input class="setting__input" type="number" max="700" min="200" value="500" name="time" id="time" data-control="time">
+          <input class="setting__input" type="number" max="700" min="200" step="25" onfocus="blur()" value="500" name="time" id="time" data-control="time">
         </label>
         <label class="setting__item setting__rotate"> Вращение фигуры
           <input class="setting__input" type="button" value="ArrowUp" id="setting-rotate" data-control="keyRotate">

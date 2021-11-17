@@ -1,33 +1,28 @@
-const drop = new Audio('sounds/drop.mp3'),
-  gameOver = new Audio('sounds/gameOver.mp3'),
-  levelUp = new Audio('sounds/levelUp.mp3'),
-  move = new Audio('sounds/move.mp3'),
-  start = new Audio('sounds/start.mp3');
-
 const tetris = (function () {
   // это будем парсить из локала и заполнять при инициализации, если в локале пусто
 
 
   function GameView() {
-    let myContainer = null
-    let btnCheckState = null
-    let btnNewGame = null
-    let btnSaveScore = null
-    let form = null
-    let inputUserName = null
-    let = false
-    let splashScreen = true
     const colors = ['#00F0F0', '#F0A000', '#0000F0', '#F0F000', '#00F000', '#F00000', '#52007B'];
+    let myContainer = null;
     let canvas = {
       el: null,
       width: null,
       height: null,
       cellSize: null,
       ctx: null,
-      score: null,
-      line: null,
-      level: null,
       isDrowCells: false,
+    };
+    let aside = {
+      btnNewGame: null,
+      btnCheckState: null,
+      btnSaveScore: null,
+      inputUserName: null,
+      form: null,
+      score: null,
+      level: null,
+      line: null,
+
     }
     let canvasAd = {
       el: null,
@@ -38,34 +33,31 @@ const tetris = (function () {
     }
 
     this.init = function (container) {
-
       myContainer = container
-      btnCheckState = myContainer.querySelector('#pause-button')
-      btnSaveScore = myContainer.querySelector('#save-score-btn')
 
-      form = myContainer.querySelector('.game__form')
-      inputUserName = myContainer.querySelector('#username')
-      canvas.score = myContainer.querySelector('#score')
-      canvas.level = myContainer.querySelector('#level')
-      canvas.line = myContainer.querySelector('#line')
+      aside.btnNewGame = myContainer.querySelector('#newGame-button')
+      aside.btnCheckState = myContainer.querySelector('#pause-button')
+      aside.btnSaveScore = myContainer.querySelector('#save-score-btn')
+      aside.inputUserName = myContainer.querySelector('#username')
+      aside.form = myContainer.querySelector('.game__form')
+      aside.score = myContainer.querySelector('#score')
+      aside.level = myContainer.querySelector('#level')
+      aside.line = myContainer.querySelector('#line')
 
       canvas.el = myContainer.querySelector('#game-canvas')
       canvas.ctx = canvas.el.getContext('2d')
 
       canvasAd.el = myContainer.querySelector('#canvas-next-tetra')
       canvasAd.ctx = canvasAd.el.getContext('2d')
-
-
-      btnNewGame = myContainer.querySelector('#newGame-button')
-
     }
-    this.setSize = function (bigBoard, smallBoard, isDrowCells) {
+    this.setSize = function (bigBoard, smallBoard) {
       canvas.width = bigBoard.width;
       canvas.height = bigBoard.height;
       canvas.cellSize = bigBoard.cellSize;
       canvas.el.setAttribute('width', canvas.width);
       canvas.el.setAttribute('height', canvas.height);
-      canvas.isDrowCells = isDrowCells;
+      canvas.isDrowCells = bigBoard.isDrowCells;
+
       canvasAd.width = smallBoard.width;
       canvasAd.height = smallBoard.height;
       canvasAd.cellSize = smallBoard.cellSize;
@@ -73,36 +65,36 @@ const tetris = (function () {
       canvasAd.el.setAttribute('height', canvasAd.height);
     }
     this.stopGame = function () {
-      btnCheckState.innerHTML = 'Продолжить'
+      aside.btnCheckState.innerHTML = 'Продолжить'
     }
     this.playGame = function () {
-      btnCheckState.innerHTML = 'Пауза'
-
+      aside.btnCheckState.innerHTML = 'Пауза'
     }
     this.startNewGame = function () {
       canvasAd.el.style.display = 'block'
-      inputUserName.classList.remove('input-try')
-      inputUserName.classList.remove('input-error')
+      aside.inputUserName.classList.remove('input-try')
+      aside.inputUserName.classList.remove('input-error')
       this.clearBord()
-      btnCheckState.classList.remove('hide')
-      form.classList.add('hide')
+      aside.btnCheckState.classList.remove('hide')
+      aside.form.classList.add('hide')
     }
     this.gameOver = function (splashScreen) {
-      canvasAd.el.style.display = 'none'
       let ctx = canvas.ctx
+      canvasAd.el.style.display = 'none'
+
       if (!splashScreen) {
-        btnCheckState.classList.add('hide')
-        btnSaveScore.classList.remove('hide')
-        form.classList.remove('hide')
+        aside.btnCheckState.classList.add('hide')
+        aside.btnSaveScore.classList.remove('hide')
+        aside.form.classList.remove('hide')
       }
       setTimeout(() => {
         ctx.fillStyle = 'black'
-        ctx.fillRect(2, canvas.height/2 - canvas.cellSize*2, canvas.width-4, canvas.cellSize*3)
-        ctx.font = `${canvas.cellSize*1.55}px Arial`;
+        ctx.fillRect(2, canvas.height / 2 - canvas.cellSize * 2, canvas.width - 4, canvas.cellSize * 3)
+        ctx.font = `${canvas.cellSize * 1.55}px Arial`;
         ctx.textAlign = 'center'
         ctx.fillStyle = 'black';
         ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2);
-        ctx.font = `${canvas.cellSize*1.5}px Arial`;
+        ctx.font = `${canvas.cellSize * 1.5}px Arial`;
         ctx.fillStyle = 'red';
         ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2);
       }, 0);
@@ -148,9 +140,9 @@ const tetris = (function () {
       }
     }
     this.renderStats = function (score, level = 1, line = 0) {
-      canvas.score.innerText = score
-      canvas.level.innerText = level
-      canvas.line.innerText = line
+      aside.score.innerText = score
+      aside.level.innerText = level
+      aside.line.innerText = line
 
     }
     this.drowCells = function () {
@@ -172,19 +164,18 @@ const tetris = (function () {
       ctxAd.fillStyle = 'white'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
       ctxAd.fillRect(0, 0, canvasAd.width, canvasAd.height)
-      // if (canvas.isDrowCells)this.drowCells()
     }
     this.btnSaveState = function (str) {
-      btnSaveScore.disabled = str
+      aside.btnSaveScore.disabled = str
     }
     this.userExists = function (user) {
       if (user) {
-        inputUserName.classList.remove('input-try')
-        inputUserName.classList.add('input-error')
+        aside.inputUserName.classList.remove('input-try')
+        aside.inputUserName.classList.add('input-error')
       } else {
-        inputUserName.classList.remove('input-error')
-        inputUserName.classList.add('input-try')
-        btnSaveScore.classList.add('hide')
+        aside.inputUserName.classList.remove('input-error')
+        aside.inputUserName.classList.add('input-try')
+        aside.btnSaveScore.classList.add('hide')
       }
 
     }
@@ -192,14 +183,13 @@ const tetris = (function () {
 
   function GameModel() {
 
-    let myView = null
-    // проверим идет ли анимация
-    let ani = null
-    let splashScreenId = null
-    let isSplashScreen = false
-    let setting = {}
-    let curTetra = null
-
+    let myView = null,
+      animation = null,
+      splashScreenId = null,
+      isSplashScreen = false,
+      setting = null,
+      curTetra = null,
+      nextTetra = null;
 
     let board = {
       width: null,
@@ -216,9 +206,9 @@ const tetris = (function () {
       isDrowCells: false,
     }
     let boardNextTetra = {
-      width: 180,
-      height: 180,
-      cellSize: 40,
+      width: null,
+      height: null,
+      cellSize: null,
     }
 
     let tetraminos = [{
@@ -291,9 +281,7 @@ const tetris = (function () {
         posX: 3,
         posY: -2,
       }
-
-    ]
-    let nextTetra = {}
+    ];
 
     this.init = function (view) {
       myView = view
@@ -307,7 +295,6 @@ const tetris = (function () {
       } else {
         start.volume = 0
         gameOver.volume = 0
-
       }
       if (setting.sound) {
         move.volume = +setting.soundVol
@@ -320,26 +307,25 @@ const tetris = (function () {
 
       }
       this.splashScreen()
-
     }
     this.setSize = function (height, width) {
       if (width >= 1400) {
         board.cellSize = 36
         boardNextTetra.cellSize = 40
       } else if (width >= 1200) {
-        board.cellSize = 22
-        boardNextTetra.cellSize = 24
+        board.cellSize = 26
+        boardNextTetra.cellSize = 30
       } else if (width >= 992) {
-        board.cellSize = 24
-        boardNextTetra.cellSize = 32
+        board.cellSize = 22
+        boardNextTetra.cellSize = 26
       } else {
-        board.cellSize = 20
-        boardNextTetra.cellSize = 28
+        board.cellSize = 18
+        boardNextTetra.cellSize = 22
       }
       board.height = board.cellSize * board.row
       board.width = board.cellSize * board.col
       boardNextTetra.width = boardNextTetra.height = boardNextTetra.cellSize * 4 + 2
-      myView.setSize(board, boardNextTetra, board.isDrowCells)
+      myView.setSize(board, boardNextTetra)
     }
     this.startNewGame = function () {
       if (isSplashScreen) clearInterval(splashScreenId)
@@ -350,7 +336,7 @@ const tetris = (function () {
       board.isPlay = true
       curTetra = null
       nextTetra = null
-      clearInterval(ani)
+      clearInterval(animation)
       setTimeout(() => {
         curTetra = this.getRandomTetra()
         nextTetra = this.getRandomTetra()
@@ -434,7 +420,7 @@ const tetris = (function () {
       if (board.isPlay) {
         myView.stopGame()
         board.isPlay = false
-        clearInterval(ani)
+        clearInterval(animation)
       } else {
         myView.playGame()
         board.isPlay = true
@@ -443,13 +429,11 @@ const tetris = (function () {
     }
 
     this.startAnimation = function () {
-      clearInterval(ani)
-      ani = setInterval(() => {
+      clearInterval(animation)
+      animation = setInterval(() => {
         this.moveDownFigure()
         myView.reDraw(this.calcCords())
       }, board.time);
-
-
     }
 
     this.getRandomTetra = function () {
@@ -540,7 +524,7 @@ const tetris = (function () {
     }
     this.gameOver = function () {
       myView.clearBord()
-      clearInterval(ani)
+      clearInterval(animation)
       board.isPlay = false
       if (!isSplashScreen) {
         gameOver.play()
@@ -654,9 +638,8 @@ const tetris = (function () {
       myView.btnSaveState(!str)
     }
     this.exitGame = function () {
-
+      clearInterval(animation)
     }
-
   }
 
 
@@ -696,12 +679,12 @@ const tetris = (function () {
       myModel.validName(e.target.value)
     }
     this.exitGame = function () {
-      myModel.exitGame()
       playerNameInput.removeEventListener('input', this.validInput)
       btnCheckState.removeEventListener('click', this.stateGame)
       btnSaveScore.removeEventListener('click', this.saveScore)
       btnNewGame.removeEventListener('click', this.newGame)
       document.removeEventListener('keydown', self.moveFigure)
+      myModel.exitGame()
     }
     this.userExists = function (e) {
       e.preventDefault()
@@ -736,13 +719,7 @@ const tetris = (function () {
       appModalView.init(container);
       appModalModel.init(appModalView);
       appModalController.init(container, appModalModel);
-      this.main()
     },
-
-    main: function () {
-      console.log('Инициализация прошла успешно. Project by Vadim Galakov. Версия проекта: ' + this.version);
-    },
-
   };
 
 })()

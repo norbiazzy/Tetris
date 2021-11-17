@@ -10,13 +10,17 @@ firebase.initializeApp({
 
 const myAppDB = firebase.database();
 
+const drop = new Audio('sounds/drop.mp3'),
+  gameOver = new Audio('sounds/gameOver.mp3'),
+  levelUp = new Audio('sounds/levelUp.mp3'),
+  move = new Audio('sounds/move.mp3'),
+  start = new Audio('sounds/start.mp3');
+
 // Список компонент (from components.js)
 const components = {
   header: Header,
-  // navbar: NavBar,
   content: Content,
   footer: Footer,
-  modal: WarnModal,
 };
 
 // Список поддердживаемых роутов (from pages.js)
@@ -35,88 +39,61 @@ const mySPA = (function () {
 
   /* ------- begin view -------- */
   function ModuleView() {
-    let myModuleContainer = null;
-    let menu = null;
+    let myContainer = null;
     let contentContainer = null;
     let routesObj = null;
-    let warnModal = null
+    
     this.init = function (container, routes) {
-      myModuleContainer = container;
+      myContainer = container;
       routesObj = routes;
-      menu = myModuleContainer.querySelector("#mainmenu");
-      contentContainer = myModuleContainer.querySelector("#content");
-      warnModal = document.querySelector('.modal__wrapper')
+      contentContainer = myContainer.querySelector("#content");
     }
 
     this.renderContent = function (hashPageName) {
       let routeName = "default";
 
-      if (hashPageName.length > 0) {
-        routeName = hashPageName in routes ? hashPageName : "error";
-      }
-
+      if (hashPageName.length > 0) routeName = hashPageName in routes ? hashPageName : "error";
       window.document.title = routesObj[routeName].title;
       contentContainer.innerHTML = routesObj[routeName].render(`${routeName}-page`);
-      // this.updateButtons(routesObj[routeName].id);
     }
-
-    // this.updateButtons = function (currentPage) {
-    //   const menuLinks = menu.querySelectorAll(".mainmenu__link");
-
-    //   for (let link of menuLinks) {
-    //     currentPage === link.getAttribute("href").slice(1) ? link.classList.add("active") : link.classList.remove("active");
-    //   }
-    // }
   };
-  /* -------- end view --------- */
-  /* ------- begin model ------- */
+
   function ModuleModel() {
-    let myModuleView = null;
-    let viewModal = false
+    let myView = null
+
     this.init = function (view) {
-      myModuleView = view;
+      myView = view;
     }
 
     this.updateState = function (pageName) {
-      myModuleView.renderContent(pageName);
-      console.log(pageName);
+      myView.renderContent(pageName);
       if (pageName === 'game') {
         tetris.init()
-        // audio.initPageGame()
       } else if (pageName === 'setting') {
         gameSetting.init()
-        // audio.initPageSetting()
       } else if (pageName === 'check') {
         scoreTable.init()
-      } else if (pageName === 'main') {
-        mainScreen.init()
       }
     }
   }
-
-  /* -------- end model -------- */
-  /* ----- begin controller ---- */
   function ModuleController() {
-    let myModuleContainer = null;
-    let myModuleModel = null;
-
+    let myContainer = null;
+    let myModel = null;
 
     this.init = function (container, model) {
-      myModuleContainer = container;
-      myModuleModel = model;
+      myContainer = container;
+      myModel = model;
 
-      // вешаем слушателей на событие hashchange и кликам по пунктам меню
       window.addEventListener("hashchange", this.updateState);
 
-      this.updateState(); //первая отрисовка
+      this.updateState();
     }
 
     this.updateState = function () {
       const hashPageName = location.hash.slice(1).toLowerCase();
-      myModuleModel.updateState(hashPageName);
+      myModel.updateState(hashPageName);
     }
   };
-  /* ------ end controller ----- */
 
   return {
     init: function ({
@@ -146,7 +123,6 @@ const mySPA = (function () {
       const model = new ModuleModel();
       const controller = new ModuleController();
 
-      //связываем части модуля
       view.init(document.getElementById(container), routes);
       model.init(view);
       controller.init(document.getElementById(container), model);
@@ -162,9 +138,7 @@ const mySPA = (function () {
   };
 
 }());
-/* ------ end app module ----- */
 
-/*** --- init module --- ***/
 document.addEventListener("DOMContentLoaded", mySPA.init({
   container: "spa",
   routes: routes,

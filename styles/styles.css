@@ -408,6 +408,9 @@ tr {
 .error {
   color: white;
 }
+.error__link {
+  color: rgb(0, 255, 0);
+}
 
 @media (min-width: 1200px) {
   .game__score {

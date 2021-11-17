@@ -1,7 +1,7 @@
 const GamePage = {
   id: "game",
   title: "Tetris",
-  render: (className = "container", ...rest) => {
+  render: (className = "container") => {
     return `
     <section class="game ${className}">
       <div class="game__wrapper">
@@ -36,7 +36,7 @@ const GamePage = {
 const HomePage = {
   id: "home",
   title: "Галавная страница",
-  render: (className = "container", ...rest) => {
+  render: (className = "container") => {
     return `
     <section class="main ${className}">
       <nav class="mainmenu" id="mainmenu">
@@ -57,7 +57,7 @@ const HomePage = {
 const SettingPage = {
   id: "setting",
   title: "Настройки Tetris",
-  render: (className = "container", ...rest) => {
+  render: (className = "container") => {
     return `
       <section class="${className}">
       <div class="setting">
@@ -109,7 +109,7 @@ const SettingPage = {
 const HelpPage = {
   id: "help",
   title: "Правила игры в Tetris",
-  render: (className = "container", ...rest) => {
+  render: (className = "container") => {
     return `
       <section class="${className}">
       <div class="wrapper">
@@ -123,7 +123,7 @@ const HelpPage = {
 const CheckPage = {
   id: "check",
   title: "Лучшие игроки",
-  render: (className = "container", ...rest) => {
+  render: (className = "container") => {
     return `
       <section class="${className}">
       <div class="check__wrapper wrapper">
@@ -147,12 +147,12 @@ const CheckPage = {
 
 const ErrorPage = {
   id: "error",
-  title: "Achtung, warning, kujdes, attenzione, pozornost...",
-  render: (className = "container", ...rest) => {
+  title: "Данной страницы не существует",
+  render: (className = "container") => {
     return `
       <section class="${className} error">
         <h1 class="error__title">Ошибка 404</h1>
-        <p class="error__text">Страница не найдена, попробуйте вернуться на <a href="#main">главную</a>.</p>
+        <p class="error__text">Страница не найдена, попробуйте вернуться на <a class="error__link" href="#main">главную</a>.</p>
       </section>
     `;
   }

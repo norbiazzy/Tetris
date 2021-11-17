@@ -89,6 +89,9 @@ const gameSetting = (function () {
       myView.setSetting(customSetting)
     }
     this.setLocalVal = function (dataKey, val) {
+      for (const key in customSetting) {
+        if (customSetting[key] == val) return
+      }
       customSetting[dataKey] = val
       localStorage.setItem('setting', JSON.stringify(customSetting))
       myView.setSetting(customSetting)
@@ -131,14 +134,13 @@ const gameSetting = (function () {
 
       soundRange = myContainer.querySelector('#setting-range-sound')
       soundRange.addEventListener('mouseup', this.setVal)
-      
+
       window.addEventListener("hashchange", this.exitSetting, {
         once: true
       });
     }
-    this.setBtn = function (e) {      
+    this.setBtn = function (e) {
       if (btnsId.find(id => id === e.target.id)) {
-        debugger
         document.addEventListener('keydown', set = (a) => {
           myModel.setLocalVal(e.target.dataset.control, a.code)
 
@@ -170,7 +172,7 @@ const gameSetting = (function () {
     this.exitSetting = function () {
       myContainer.removeEventListener('click', this.setBtn)
     }
-    
+
   }
 
   return {

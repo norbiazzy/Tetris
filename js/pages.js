@@ -32,7 +32,6 @@ const GamePage = {
             `;
           }
         };
-        // <button class="game__item" href="#main">Глвное меню</button>
 
 const HomePage = {
   id: "home",
@@ -49,15 +48,11 @@ const HomePage = {
           <li><a class="mainmenu__link" href="#help">Помощь</a></li>
           <li><a class="mainmenu__link" href="#check">Счет</a></li>
         </ul>
-        </nav>
-        </section>
+      </nav>
+    </section>
         `;
   }
 };
-
-
-
-// <li><a class="mainmenu__link" href="#main">Галавная страница</a></li>
 
 const SettingPage = {
   id: "setting",
@@ -88,8 +83,7 @@ const SettingPage = {
         <label class="setting__item setting__power-down">Сетка
           <input class="setting__input setting__input_checkbox" type="checkbox" id="setting-cells" value="true" data-control="isDrowCells">
           <span class="checkbox"></span>
-        </label>
-        
+        </label>        
         <label class="setting__item setting__power-down">Музыка
           <input class="setting__input setting__input_checkbox" type="checkbox" id="setting-music" value="true" data-control="music">
           <span class="checkbox"></span>
@@ -98,15 +92,12 @@ const SettingPage = {
           <input class="setting__input setting__input_checkbox" type="checkbox" id="setting-sound" value="true" data-control="sound">
           <span class="checkbox"></span>
         </label>
-
         <label class="setting__item setting__power-down">Громкость Музыки
           <input type="range" id="setting-range-music" min="0" max="0.3" step="0.01" data-control="musicVol">
         </label>
-
         <label class="setting__item setting__power-down">Громкость звуков
           <input type="range" id="setting-range-sound" min="0" max="0.3" step="0.01" data-control="soundVol">
-        </label>
-          
+        </label>          
         <input class="setting__item setting__btn setting__reset" id="setting-reset" type="button" value="Cбросить настройки">
         <a class="setting__item setting__btn" href="#main">Глвное меню</a>
       </form>
@@ -159,9 +150,9 @@ const ErrorPage = {
   title: "Achtung, warning, kujdes, attenzione, pozornost...",
   render: (className = "container", ...rest) => {
     return `
-      <section class="${className}">
-        <h1>Ошибка 404</h1>
-        <p>Страница не найдена, попробуйте вернуться на <a href="#main">главную</a>.</p>
+      <section class="${className} error">
+        <h1 class="error__title">Ошибка 404</h1>
+        <p class="error__text">Страница не найдена, попробуйте вернуться на <a href="#main">главную</a>.</p>
       </section>
     `;
   }

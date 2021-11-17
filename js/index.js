@@ -16,14 +16,12 @@ const drop = new Audio('sounds/drop.mp3'),
   move = new Audio('sounds/move.mp3'),
   start = new Audio('sounds/start.mp3');
 
-// Список компонент (from components.js)
 const components = {
   header: Header,
   content: Content,
   footer: Footer,
 };
 
-// Список поддердживаемых роутов (from pages.js)
 const routes = {
   main: HomePage,
   game: GamePage,
@@ -34,15 +32,13 @@ const routes = {
   error: ErrorPage,
 };
 
-/* ----- spa init module --- */
 const mySPA = (function () {
 
-  /* ------- begin view -------- */
   function ModuleView() {
     let myContainer = null;
     let contentContainer = null;
     let routesObj = null;
-    
+
     this.init = function (container, routes) {
       myContainer = container;
       routesObj = routes;
@@ -76,6 +72,7 @@ const mySPA = (function () {
       }
     }
   }
+
   function ModuleController() {
     let myContainer = null;
     let myModel = null;

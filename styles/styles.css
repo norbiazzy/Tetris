@@ -4,7 +4,6 @@ body {
   height: 100vh;
   box-sizing: border-box;
   font-family: "Exo 2", sans-serif;
-  /* overflow-x: hidden; */
   background-image: url('../images/tetris-blocks-cube-pattern-cro-design.jpg');
   text-shadow: white;
 
@@ -40,10 +39,7 @@ table {
 
 .app {
   height: 100%;
-  /* overflow: hidden; */
   display: flex;
-  /* min-height: 100vh; */
-  /* min-width: 100%; */
   flex-direction: column;
   justify-content: space-between;
 }
@@ -80,8 +76,6 @@ footer>p {
 }
 
 .main__canvas {
-
-  /* height: 100vh; */
   position: absolute;
   top: 0;
   left: 0;
@@ -275,13 +269,6 @@ input:hover {
   height: 0;
 }
 
-/* .setting__link {
-  border: 1px solid black;
-  text-align: center;
-  color: #FFF;
-  background-color: #000;
-} */
-
 .checkbox {
   cursor: pointer;
   position: relative;
@@ -326,8 +313,6 @@ input:hover {
 
 .modal__wrapper {
   position: absolute;
-  /* width: 100vw; */
-  /* height: 100vh; */
   transform: translate(-20px, -20px);
 }
 
@@ -399,7 +384,6 @@ input:hover {
 }
 
 tr {
-  /* padding: 10px 32px; */
   border: 1px solid black;
 }
 
@@ -412,12 +396,6 @@ tr {
   border-radius: 5px;
 }
 
-/* .btn__sort:hover {
-  background-color: black;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s;
-} */
 .input-try {
   box-shadow: 0 0 7px rgb(0, 255, 0);
 }
@@ -427,21 +405,17 @@ tr {
 
 }
 
-
+.error {
+  color: white;
+}
 
 @media (min-width: 1200px) {
-
   .game__score {
     margin: 10px 0;
   }
-
 }
 
 @media (min-width: 922px) {
-
-  /* .header {
-    padding: 10px;
-  } */
   .header>a {
     font-size: 30px;
   }

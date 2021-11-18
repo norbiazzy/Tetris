@@ -150,8 +150,6 @@ footer>p {
   border: 2px solid;
 }
 
-.game__canvas_small {}
-
 .game__bar {
   display: flex;
   flex-direction: column;
@@ -227,6 +225,11 @@ input:hover {
   justify-content: center;
 }
 
+.setting__title {
+  margin-top: 0;
+  text-align: center;
+}
+
 .setting__form {
   padding: 20px;
   display: flex;
@@ -297,20 +300,6 @@ input:hover {
   transition: all .2s;
 }
 
-.setting__time {}
-
-.setting__rotate {}
-
-.setting__left {}
-
-.setting__rigth {}
-
-.setting__save {}
-
-.setting__cancel {}
-
-.setting__reset {}
-
 .modal__wrapper {
   position: absolute;
   transform: translate(-20px, -20px);
@@ -344,14 +333,6 @@ input:hover {
   margin-top: 0;
 }
 
-.modal__text {}
-
-.modal__btn {}
-
-.modal__btn_assept {}
-
-.modal__btn_cancel {}
-
 .check-page {
   text-align: center;
 }
@@ -368,7 +349,6 @@ input:hover {
   padding: 20px;
   background-color: white;
 }
-
 
 .row {
   display: flex;
@@ -408,6 +388,7 @@ tr {
 .error {
   color: white;
 }
+
 .error__link {
   color: rgb(0, 255, 0);
 }

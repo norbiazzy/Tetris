@@ -62,7 +62,8 @@ const SettingPage = {
       <section class="${className}">
       <div class="setting">
       <form class="setting__form">
-        <label class="setting__item setting__time">Время между фигурами
+        <h2 class="setting__title">Настройки</h2>
+        <label class="setting__item setting__time">Шаг фигуры
           <input class="setting__input" type="number" max="700" min="200" step="25" onfocus="blur()" value="500" name="time" id="time" data-control="time">
         </label>
         <label class="setting__item setting__rotate"> Вращение фигуры
